@@ -1,0 +1,38 @@
+#!/bin/bash
+
+j=jenkins_master
+RUN_DIR=/var/vcap/sys/run/$j
+LOG_DIR=/var/vcap/sys/log/$j
+PIDFILE=${RUN_DIR}/pid
+
+case $1 in
+
+  start)
+    mkdir -p $RUN_DIR $LOG_DIR
+    chown -R vcap:vcap $RUN_DIR $LOG_DIR
+
+    echo $$ > $PIDFILE
+
+    cd /var/vcap/packages/$j
+
+    export PATH=/var/vcap/packages/ruby_1.9.3/bin:$PATH
+
+    exec /var/vcap/packages/ruby_1.9.3/bin/bundle exec \
+      rackup -p <%= properties.web_ui.port %> \
+      >>  $LOG_DIR/web_ui.stdout.log \
+      2>> $LOG_DIR/web_ui.stderr.log
+
+    ;;
+
+  stop)
+    kill -9 `cat $PIDFILE`
+    rm -f $PIDFILE
+
+    ;;
+
+  *)
+    echo "Usage: ctl {start|stop}" ;;
+
+esac
+
+#

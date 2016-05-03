@@ -1,0 +1,6 @@
+---
+name: jenkins_master
+templates:
+  ctl.erb: bin/ctl
+  
+packages:
