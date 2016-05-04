@@ -50,6 +50,7 @@ preparation() {
   fi ;
   [[ ! -e "$releaseName/.git" ]] || rm -rf "$releaseName/.git"
   execute cd "$releaseName" ;
+  [[ -e NOTICE ]] || touch NOTICE ;
 }
 step1() {
   for j in jenkins_master jenkins_bosh_slave ; do
