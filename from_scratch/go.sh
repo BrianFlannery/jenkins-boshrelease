@@ -119,13 +119,14 @@ step6() {
   bosh target ;
   echo -e "\nNOTE: Should already be targeting the BOSH Director you want.\n" ;
   local uuid=`bosh status --uuid` ;
+  # cd .. ;
   [[ -e deployment_manifest.yml ]] || cat > deployment_manifest.yml <<EOF6
 ---
 name: ${releaseName}-deployment
 director_uuid: $uuid
 
 releases:
-- {name: jenkins_master, version: latest}
+- {name: ${releaseName}, version: latest}
 
 resource_pools:
 - name: vms
@@ -162,6 +163,7 @@ properties:
   jenkins_master:
     httpPort: 8082
 EOF6
+  execute bosh upload release ;
   execute bosh deployment deployment_manifest.yml ;
   execute bosh deploy ;
 }
