@@ -51,14 +51,16 @@ step2() {
   echo "Nothing happens." 1>&2 ;
 }
 step3() {
-  for p in 'ardo_app' 'libyaml_0.1.4' 'ruby_1.9.3' ; do
+  for p in 'jenkins_master_war' 'openjre_8' ; do
     [[ -e packages/$p ]] || execute bosh generate package $p ;
   done ;
+  if [[ '' ]] ; then
   local d=packages/ardo_app ;
   [[ -e $d/Gemfile ]] || step3_mkGemfile $d/Gemfile ;
   ( cd $d ;
     bundle package ;
   )
+  fi ;
 }
 step3_mkGemfile() {
   cat > $1 <<'EOF3'
