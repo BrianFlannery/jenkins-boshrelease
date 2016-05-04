@@ -1,14 +1,26 @@
 #!/bin/bash
 
 releaseName="jenkins-boshrelease-I5H0" ;
-releaseVersion='0.0.1' ;
+releaseMinor='0.0' ;
+releaseVersion="$releaseMinor.1" ;
 
 die() { echo "$1" ; exit 1 ;
 }
 cd $(dirname $0) || die "ERROR: Failed to cd $(dirname $0): $? ."
 source "general.sh" ;
 
+init() {
+  local i=1 ;
+  local j=1 ;
+  local dev_release_yml="$releaseName/dev_releases/$releaseName/${releaseName}-${releaseMinor}.$i.yml" ;
+  while [[ -e $dev_release_yml && $i -lt 999 ]] ; do
+    i=$((i+1)) ;
+    dev_release_yml="$releaseName/dev_releases/$releaseName/${releaseName}-${releaseMinor}.$i.yml" ;
+  done ;
+  export releaseVersion="$releaseMinor.$i" ;
+}
 main() {
+  init ;
   preparation ;
   step1 ;
   step2 ;
@@ -106,7 +118,52 @@ step6() {
     --version "$releaseVersion" ;
   bosh target ;
   echo -e "\nNOTE: Should already be targeting the BOSH Director you want.\n" ;
-  
+  local uuid=`bosh status --uuid` ;
+  [[ -e deployment_manifest.yml ]] || cat > deployment_manifest.yml <<EOF6
+---
+name: ${releaseName}-deployment
+director_uuid: $uuid
+
+releases:
+- {name: jenkins_master, version: latest}
+
+resource_pools:
+- name: vms
+  network: default
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: 3147
+
+networks:
+- name: default
+  type: dynamic
+
+compilation:
+  workers: 1
+  network: default
+  reuse_compilation_vms: true
+
+update:
+  canaries: 1
+  max_in_flight: 3
+  canary_watch_time: 15000-30000
+  update_watch_time: 15000-300000
+
+jobs:
+- name: jenkins_master
+  instances: 1
+  templates:
+  - {name: jenkins_master, release: ${releaseName}}
+  resource_pool: vms
+  networks:
+  - name: default
+
+properties:
+  jenkins_master:
+    httpPort: 8082
+EOF6
+  execute bosh deployment deployment_manifest.yml ;
+  execute bosh deploy ;
 }
 
 
