@@ -1,2 +1,14 @@
 # abort script on any command that exits with a non zero value
-set -e
+set -e -x -u
+
+export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+
+# $BOSH_INSTALL_TARGET - /var/vcap/packages/$PACKAGE_NAME
+# $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
+# $PWD - $BOSH_COMPILE_TARGET
+
+echo "DEBUG: cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME" ;
+cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME ;
+archive=`ls -lart | egrep '[.]war$' | tail -1 | awk '{print $NF}'` ;
+
+cp -a $BOSH_COMPILE_TARGET/$PACKAGE_NAME/$archive ${BOSH_INSTALL_TARGET}/jenkins.war

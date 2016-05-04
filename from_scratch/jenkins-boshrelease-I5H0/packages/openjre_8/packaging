@@ -1,2 +1,24 @@
 # abort script on any command that exits with a non zero value
-set -e
+set -e -x -u
+
+export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+
+# $BOSH_INSTALL_TARGET - /var/vcap/packages/$PACKAGE_NAME
+# $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
+# $PWD - $BOSH_COMPILE_TARGET
+
+echo "Extracting archive..."
+echo "DEBUG: cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME" ;
+cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME ;
+archive=`ls -lart | egrep '[.](tar[.]|t)gz$' | tail -1 | awk '{print $NF}'` ;
+echo "DEBUG: cd ${BOSH_INSTALL_TARGET}/$PACKAGE_NAME" ;
+cd ${BOSH_INSTALL_TARGET}/$PACKAGE_NAME ;
+tar xzf $BOSH_COMPILE_TARGET/$PACKAGE_NAME/$archive ;
+
+if [[ -d bin && `bin/java -version 2>&1` =~ "openjdk version" && $? == 0 ]]; then
+  echo "OpenJDK is properly installed"
+else
+  echo "OpenJDK is not properly packaged"
+  exit 1
+fi
+
