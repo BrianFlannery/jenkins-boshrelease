@@ -164,6 +164,14 @@ properties:
   jenkins_master:
     httpPort: 8082
 EOF6
+  if [[ '' ]] ; then
+    cat > /tmp/tmp <<EOF6b
+properties:
+  jenkins_master.httpPort:
+    description: HTTP Port on which Jenkins runs
+    default: 8082
+EOF6b
+  fi ;
   execute bosh upload release ;
   execute bosh deployment deployment_manifest.yml ;
   execute bosh deploy ;

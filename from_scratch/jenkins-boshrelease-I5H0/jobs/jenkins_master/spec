@@ -5,7 +5,7 @@ templates:
   
 packages:
 - jenkins_master_war
-- jre_8
+- openjre_8
 
 properties:
    jenkins_master.httpPort:

@@ -1,0 +1,41 @@
+---
+name: jenkins-boshrelease-I5H0-deployment
+director_uuid: b7e651e2-3afe-471f-9bca-93048fa591f4
+
+releases:
+- {name: jenkins-boshrelease-I5H0, version: latest}
+
+resource_pools:
+- name: vms
+  network: default
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: 3147
+
+networks:
+- name: default
+  type: dynamic
+
+compilation:
+  workers: 1
+  network: default
+  reuse_compilation_vms: true
+
+update:
+  canaries: 1
+  max_in_flight: 3
+  canary_watch_time: 15000-30000
+  update_watch_time: 15000-300000
+
+jobs:
+- name: jenkins_master
+  instances: 1
+  templates:
+  - {name: jenkins_master, release: jenkins-boshrelease-I5H0}
+  resource_pool: vms
+  networks:
+  - name: default
+
+properties:
+  jenkins_master:
+    httpPort: 8082

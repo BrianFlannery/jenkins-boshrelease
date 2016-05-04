@@ -1,9 +1,25 @@
 #!/bin/bash
 
+jre=openjre_8 ;
 j=jenkins_master
+
 RUN_DIR=/var/vcap/sys/run/$j
 LOG_DIR=/var/vcap/sys/log/$j
 PIDFILE=${RUN_DIR}/pid
+log="$LOG_DIR/jenkins.stdout.log" ;
+elog="$LOG_DIR/jenkins.stderr.log" ;
+
+
+die() { echo $1 ; exit 1 ;
+}
+execute() {
+  "$@" || die "ERROR: execute: $@: $?" ;
+}
+vexecute() {
+  echo "$@" ;
+  "$@" || die "ERROR: vexecute: $@: $?" ;
+  echo ;
+}
 
 case $1 in
 
@@ -13,17 +29,28 @@ case $1 in
 
     echo $$ > $PIDFILE
 
+    for l in "$log" "$elog" ; do
+      ( echo -e "\n\n" ; date ; echo ) &>> $l ;
+    done ;
+    
+    vexecute pwd &>> $elog ;
+    vexecute cat $0 &>> $elog ;
+    
     cd /var/vcap/packages/jenkins_master_war
+    
+    for d in /var/vcap/ /var/vcap/packages/ /var/vcap/packages/openjre_8 ; do
+      vexecute ls -lart "$d" &>> $elog ;
+    done ;
 
-    export JAVA_HOME=/var/vcap/packages/openjre_8
+    export JAVA_HOME=/var/vcap/packages/$jre
     export PATH=$JAVA_HOME/bin:$PATH
     [[ $PORT ]] || export PORT=<%= p('jenkins_master.httpPort') %>
 
-    exec $JAVA_HOME/bin/java \
+    exec chpst -v $JAVA_HOME/bin/java \
       -jar jenkins.war \
-      --httpPort $PORT \
-      >>  $LOG_DIR/jenkins.stdout.log \
-      2>> $LOG_DIR/jenkins.stderr.log
+      --httpPort=$PORT \
+      >>  $log \
+      2>> $elog
 
     ;;
 
