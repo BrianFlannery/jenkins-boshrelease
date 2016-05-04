@@ -1,4 +1,0 @@
-# https://gist.github.com/antonsoroko/974924e0692aa2171229dafa5f2561b2
-source "http://rubygems.org"
-
-gem "sinatra"
