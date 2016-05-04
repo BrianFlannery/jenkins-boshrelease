@@ -11,8 +11,8 @@ echo "Extracting archive..."
 echo "DEBUG: cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME" ;
 cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME ;
 archive=`ls -lart | egrep '[.](tar[.]|t)gz$' | tail -1 | awk '{print $NF}'` ;
-echo "DEBUG: cd ${BOSH_INSTALL_TARGET}/$PACKAGE_NAME" ;
-cd ${BOSH_INSTALL_TARGET}/$PACKAGE_NAME ;
+echo "DEBUG: cd ${BOSH_INSTALL_TARGET}" ;
+cd ${BOSH_INSTALL_TARGET} ;
 tar xzf $BOSH_COMPILE_TARGET/$PACKAGE_NAME/$archive ;
 
 if [[ -d bin && `bin/java -version 2>&1` =~ "openjdk version" && $? == 0 ]]; then
