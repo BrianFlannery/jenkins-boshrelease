@@ -28,6 +28,7 @@ preparation() {
   if [[ $unprepared ]] ; then
     local alreadyIgnoring=`ls .gitignore` ;
     execute bosh init release --git "$releaseName" ;
+    # # # NOTE: Frustrating bug with bosh init release --git: It makes the .gitignore in the pwd/cwd, not the release folder.
     [[ $alreadyIgnoring ]] || [[ ! -e .gitignore ]] || mv .gitignore "$releaseName" ;
   fi ;
   [[ ! -e "$releaseName/.git" ]] || rm -rf "$releaseName/.git"
