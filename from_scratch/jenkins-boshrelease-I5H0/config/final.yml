@@ -1,0 +1,6 @@
+---
+blobstore:
+  provider: local
+  options:
+    blobstore_path: /var/folders/vf/1_jc6mjd77v32wjpsh66f83w0000gn/T//tmp.d.rz7TekBCw0/blobs_for_jenkins-boshrelease-I5H0
+final_name: ardo_app

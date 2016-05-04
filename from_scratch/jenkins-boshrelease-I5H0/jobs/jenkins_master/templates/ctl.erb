@@ -17,9 +17,11 @@ case $1 in
 
     export JAVA_HOME=/var/vcap/packages/openjre_8
     export PATH=$JAVA_HOME/bin:$PATH
+    [[ $PORT ]] || export PORT=<%= p('jenkins_master.httpPort') %>
 
     exec $JAVA_HOME/bin/java \
       -jar jenkins.war \
+      --httpPort $PORT \
       >>  $LOG_DIR/jenkins.stdout.log \
       2>> $LOG_DIR/jenkins.stderr.log
 

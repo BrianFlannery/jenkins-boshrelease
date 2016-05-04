@@ -13,6 +13,7 @@ main() {
   step1 ;
   step2 ;
   step3 ;
+  step4 ;
   step6 ;
 }
 
@@ -69,6 +70,36 @@ source "http://rubygems.org"
 
 gem "sinatra"
 EOF3
+}
+step4() {
+  [[ -d config ]] || mkdir config ;
+  local f2=config/private.yml ;
+  local f1=config/final.yml ;
+  local tmpd=`mktemp -d "${TMPDIR:-/tmp}/tmp.d.XXXXXXXXXX"` ;
+  [[ -e $f1 ]] || cat > $f1 <<EOF4a
+---
+blobstore:
+  provider: local
+  options:
+    blobstore_path: $tmpd/blobs_for_$releaseName
+final_name: ardo_app
+EOF4a
+  [[ -e $f2 ]] || cat > $f2 <<EOF4b
+---
+blobstore_secret: 'does-not-matter'
+blobstore:
+  local:
+    blobstore_path: $tmpd/blobs_for_$releaseName
+EOF4b
+  #
+  
+  local p=jenkins_master_war ;
+  local f='jenkins-enterprise-war-1.642.2.1.war' ;
+  [[ -e blobs/$p/$f ]] || execute bosh add blob "../blobs_to_add/$p/$f" $p ;
+
+  p=openjre_8 ;
+  f='openjdk-1.8.0_65.tar.gz' ;
+  [[ -e blobs/$p/$f ]] || execute bosh add blob "../blobs_to_add/$p/$f" $p ;
 }
 step6() {
   execute bosh create release --force --name $releaseName \

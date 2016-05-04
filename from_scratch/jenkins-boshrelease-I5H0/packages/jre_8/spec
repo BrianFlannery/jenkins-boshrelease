@@ -1,7 +1,8 @@
 ---
-name: libyaml_0.1.4
+name: jre_8
 
 dependencies:
 - openjre_8
 
-files: []
+files:
+- jre_8/**/*

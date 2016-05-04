@@ -4,3 +4,10 @@ templates:
   ctl.erb: bin/ctl
   
 packages:
+- jenkins_master_war
+- jre_8
+
+properties:
+   jenkins_master.httpPort:
+     description: HTTP Port
+     default: 8081
