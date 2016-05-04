@@ -5,4 +5,4 @@ dependencies:
 - jre_8
 
 files:
-- jenkins-enterprise-war-1.642.2.1.war
+- jenkins_master_war/jenkins-enterprise-war-1.642.2.1.war
