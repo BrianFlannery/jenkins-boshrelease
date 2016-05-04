@@ -13,14 +13,15 @@ case $1 in
 
     echo $$ > $PIDFILE
 
-    cd /var/vcap/packages/ardo_app
+    cd /var/vcap/packages/jenkins_master_war
 
-    export PATH=/var/vcap/packages/ruby_1.9.3/bin:$PATH
+    export JAVA_HOME=/var/vcap/packages/openjre_8
+    export PATH=$JAVA_HOME/bin:$PATH
 
-    exec /var/vcap/packages/ruby_1.9.3/bin/bundle exec \
-      rackup -p <%= properties.web_ui.port %> \
-      >>  $LOG_DIR/web_ui.stdout.log \
-      2>> $LOG_DIR/web_ui.stderr.log
+    exec $JAVA_HOME/bin/java \
+      -jar jenkins.war \
+      >>  $LOG_DIR/jenkins.stdout.log \
+      2>> $LOG_DIR/jenkins.stderr.log
 
     ;;
 

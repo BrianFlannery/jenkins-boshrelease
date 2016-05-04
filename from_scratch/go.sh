@@ -51,7 +51,7 @@ step2() {
   echo "Nothing happens." 1>&2 ;
 }
 step3() {
-  for p in 'jenkins_master_war' 'openjre_8' ; do
+  for p in 'jenkins_master_war' 'jre_8' 'openjre_8' ; do
     [[ -e packages/$p ]] || execute bosh generate package $p ;
   done ;
   if [[ '' ]] ; then
