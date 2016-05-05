@@ -27,6 +27,8 @@ main() {
   step3 ;
   step4 ;
   step6 ;
+  
+  get_logs ;
 }
 
 preparation() {
@@ -65,7 +67,8 @@ step2() {
   echo "Nothing happens." 1>&2 ;
 }
 step3() {
-  for p in 'jenkins_master_war' 'jre_8' 'openjre_8' ; do
+  # for p in 'jenkins_master_war' 'jre_8' 'openjre_8' ; do
+  for p in 'jenkins_master_war' 'openjre_8' 'ttf_dejavu' ; do
     [[ -e packages/$p ]] || execute bosh generate package $p ;
   done ;
   if [[ '' ]] ; then
@@ -113,6 +116,14 @@ EOF4b
   p=openjre_8 ;
   f='openjdk-1.8.0_65.tar.gz' ;
   [[ -e blobs/$p/$f ]] || execute bosh add blob "../blobs_to_add/$p/$f" $p ;
+  
+  p=ttf_dejavu ;
+  for f in fonts-dejavu-core_2.34-1ubuntu1_all.deb ttf-dejavu-core_2.34-1ubuntu1_all.deb \
+    fonts-dejavu-extra_2.34-1ubuntu1_all.deb ttf-dejavu-extra_2.34-1ubuntu1_all.deb \
+    fonts-dejavu_2.34-1ubuntu1_all.deb ttf-dejavu_2.34-1ubuntu1_all.deb \
+    ; do
+    [[ -e blobs/$p/$f ]] || execute bosh add blob "../blobs_to_add/$p/$f" $p ;
+  done ;
 }
 step6() {
   execute bosh create release --force --name $releaseName \
@@ -175,6 +186,14 @@ EOF6b
   execute bosh upload release ;
   execute bosh deployment deployment_manifest.yml ;
   execute bosh deploy ;
+}
+get_logs() {
+  cd $(dirname $0) ;
+  rm -rf logs/* ; 
+  cd logs ; 
+    bosh logs jenkins_master 0 ; 
+    tar -xzf *.tgz ; 
+  cd ..
 }
 
 

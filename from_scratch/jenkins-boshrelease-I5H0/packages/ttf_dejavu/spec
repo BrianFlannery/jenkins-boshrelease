@@ -1,0 +1,13 @@
+---
+name: ttf_dejavu
+
+dependencies: []
+
+files:
+- ttf_dejavu/profile.sh
+- ttf_dejavu/fonts-dejavu-core_2.34-1ubuntu1_all.deb
+- ttf_dejavu/fonts-dejavu-extra_2.34-1ubuntu1_all.deb
+- ttf_dejavu/fonts-dejavu_2.34-1ubuntu1_all.deb
+- ttf_dejavu/ttf-dejavu-core_2.34-1ubuntu1_all.deb
+- ttf_dejavu/ttf-dejavu-extra_2.34-1ubuntu1_all.deb
+- ttf_dejavu/ttf-dejavu_2.34-1ubuntu1_all.deb

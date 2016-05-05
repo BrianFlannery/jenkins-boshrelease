@@ -3,6 +3,7 @@ name: jenkins_master_war
 
 dependencies:
 - openjre_8
+- ttf_dejavu
 
 files:
 - jenkins_master_war/jenkins-1.651.1.war # http://mirrors.jenkins-ci.org/war-stable/1.651.1/jenkins.war
