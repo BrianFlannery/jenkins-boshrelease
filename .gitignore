@@ -16,3 +16,4 @@ blobs/*
 #*
 releases/**/*.tgz
 blobs
+_code_opts

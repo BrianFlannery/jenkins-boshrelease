@@ -1,0 +1,31 @@
+# abort script on any command that exits with a non zero value
+set -e -x -u
+
+# $BOSH_INSTALL_TARGET - /var/vcap/packages/$PACKAGE_NAME
+# $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
+# $PWD - $BOSH_COMPILE_TARGET
+export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+
+# install freetype
+tar -xf $PACKAGE_NAME/freetype-2.5.3.tar.bz2
+cd freetype-2.5.3
+
+sed -i  -e "/AUX.*.gxvalid/s@^# @@" -e "/AUX.*.otvalid/s@^# @@" modules.cfg
+sed -ri -e 's:.*(#.*SUBPIXEL.*) .*:\1:' include/config/ftoption.h
+
+./configure --prefix=$BOSH_INSTALL_TARGET
+make
+make prefix=$BOSH_INSTALL_TARGET/freetype install
+
+cd ..
+
+# install fontconfig
+tar -xf $PACKAGE_NAME/fontconfig-2.11.1.tar.bz2
+cd fontconfig-2.11.1
+
+export PKG_CONFIG_PATH=$BOSH_INSTALL_TARGET/freetype/lib/pkgconfig
+export CPPFLAGS="-I/var/vcap/packages/fontconfig/freetype/include -I/var/vcap/packages/fontconfig/freetype/include/freetype2"
+export LDFLAGS="-L/var/vcap/packages/fontconfig/freetype/lib"
+./configure --prefix=$BOSH_INSTALL_TARGET --disable-docs --enable-libxml2
+make
+make prefix=$BOSH_INSTALL_TARGET install
