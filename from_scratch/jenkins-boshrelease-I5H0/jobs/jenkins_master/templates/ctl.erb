@@ -1,13 +1,18 @@
 #!/bin/bash
 
+DEBUG=2 ;
 jre=openjre_8 ;
 j=jenkins_master
 
 RUN_DIR=/var/vcap/sys/run/$j
 LOG_DIR=/var/vcap/sys/log/$j
 PIDFILE=${RUN_DIR}/pid
+
 log="$LOG_DIR/jenkins.stdout.log" ;
 elog="$LOG_DIR/jenkins.stderr.log" ;
+# [[ $JENKINS_HOME ]] || export JENKINS_HOME=/home/vcap/.jenkins ;
+# [[ $JENKINS_HOME ]] || export JENKINS_HOME=/home/vcap/$j ;
+# [[ $JENKINS_HOME ]] || export JENKINS_HOME=/var/vcap/store/$j ;
 
 
 die() { echo $1 ; exit 1 ;
@@ -24,23 +29,34 @@ vexecute() {
 case $1 in
 
   start)
-    mkdir -p $RUN_DIR $LOG_DIR
-    chown -R vcap:vcap $RUN_DIR $LOG_DIR
+    # mkdir -p $RUN_DIR $LOG_DIR $JENKINS_HOME
+    # chown -R vcap:vcap $RUN_DIR $LOG_DIR $JENKINS_HOME
+    for d in $RUN_DIR $LOG_DIR $JENKINS_HOME ; do
+      [[ -z $d ]] || [[ -e $d ]] || ( mkdir -p $d ; chown -R vcap:vcap $d ) ;
+    done ;
 
     echo $$ > $PIDFILE
 
-    for l in "$log" "$elog" ; do
-      ( echo -e "\n\n" ; date ; echo ) &>> $l ;
-    done ;
-    
-    vexecute pwd &>> $elog ;
-    vexecute cat $0 &>> $elog ;
+    if [[ $DEBUG -gt 1 ]] ; then
+      for l in "$log" "$elog" ; do
+        ( echo -e "\n\n" ; date ; echo ) &>> $l ;
+      done ;
+      
+      vexecute df -h &>> $elog ;
+      vexecute id &>> $elog ;
+      vexecute pwd &>> $elog ;
+      vexecute cat $0 &>> $elog ;
+    fi ;
     
     cd /var/vcap/packages/jenkins_master_war
     
-    for d in /var/vcap/ /var/vcap/packages/ /var/vcap/packages/openjre_8 ; do
-      vexecute ls -lart "$d" &>> $elog ;
-    done ;
+    if [[ $DEBUG -gt 1 ]] ; then
+      for d in / /home /home/vcap/ /usr /var /var/vcap/ /var/vcap/packages/ \
+        /var/vcap/packages/openjre_8 \
+        ; do
+        vexecute ls -lart "$d" &>> $elog || true ;
+      done ;
+    fi ;
 
     export JAVA_HOME=/var/vcap/packages/$jre
     export PATH=$JAVA_HOME/bin:$PATH

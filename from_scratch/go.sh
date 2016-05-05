@@ -107,7 +107,7 @@ EOF4b
   #
   
   local p=jenkins_master_war ;
-  local f='jenkins-enterprise-war-1.642.2.1.war' ;
+  local f='jenkins-1.651.1.war' ;
   [[ -e blobs/$p/$f ]] || execute bosh add blob "../blobs_to_add/$p/$f" $p ;
 
   p=openjre_8 ;

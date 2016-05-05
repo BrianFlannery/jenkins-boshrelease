@@ -1,8 +1,0 @@
----
-name: jre_8
-
-dependencies:
-- openjre_8
-
-files:
-- jre_8/**/*

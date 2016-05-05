@@ -5,4 +5,4 @@ dependencies:
 - openjre_8
 
 files:
-- jenkins_master_war/jenkins-enterprise-war-1.642.2.1.war
+- jenkins_master_war/jenkins-1.651.1.war # http://mirrors.jenkins-ci.org/war-stable/1.651.1/jenkins.war
