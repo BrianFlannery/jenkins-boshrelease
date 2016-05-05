@@ -43,6 +43,7 @@ tryOptsD='' ;
 # END GLOBAL VARIABLES
 
 main() {
+  [[ -e ../_code_opts ]] || ( cd .. && ln -s "$(basename $theseOptions)/" _code_opts ) ;
   tryOptsD=`execute findTryOpts` ;
   [[ $tryOptsD ]] || die "ERROR: Failed to find options trier." ;
   try_these_options ;
