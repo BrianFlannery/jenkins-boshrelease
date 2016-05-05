@@ -6,7 +6,12 @@ releaseVersion="$releaseMinor.1" ;
 
 die() { echo "$1" ; exit 1 ;
 }
+# # cd $(dirname $0) || die "ERROR: Failed to cd $(dirname $0): $? ."
+# thisD=$(dirname $0) ;
+# cd $thisD || die "ERROR: Failed to cd $thisD: $? ."
 cd $(dirname $0) || die "ERROR: Failed to cd $(dirname $0): $? ."
+thisD=$(pwd) ;
+echo "DEBUG: thisD=$thisD" ;
 source "general.sh" ;
 
 init() {
@@ -57,7 +62,10 @@ preparation() {
 step1() {
   for j in jenkins_master jenkins_bosh_slave ; do
     [[ -e jobs/$j ]] || execute bosh generate job $j ;
-    local f=jobs/$j/templates/ctl.erb ;
+    local d=jobs/$j/templates/bin ;
+    [[ -e $d ]] || execute mkdir $d ;
+    # local f=jobs/$j/templates/ctl.er{b} ;
+    local f=$d/${j}_ctl  ;
     [[ -e $f ]] || execute touch $f ;
   done ;
   git status ;
@@ -68,7 +76,7 @@ step2() {
 }
 step3() {
   # for p in 'jenkins_master_war' 'jre_8' 'openjre_8' ; do
-  for p in 'jenkins_master_war' 'openjre_8' 'ttf_dejavu' ; do
+  for p in 'jenkins_master_war' 'openjre_8' 'ttf_dejavu' 'fontconfig' ; do
     [[ -e packages/$p ]] || execute bosh generate package $p ;
   done ;
   if [[ '' ]] ; then
@@ -121,6 +129,12 @@ EOF4b
   for f in fonts-dejavu-core_2.34-1ubuntu1_all.deb ttf-dejavu-core_2.34-1ubuntu1_all.deb \
     fonts-dejavu-extra_2.34-1ubuntu1_all.deb ttf-dejavu-extra_2.34-1ubuntu1_all.deb \
     fonts-dejavu_2.34-1ubuntu1_all.deb ttf-dejavu_2.34-1ubuntu1_all.deb \
+    ; do
+    [[ -e blobs/$p/$f ]] || execute bosh add blob "../blobs_to_add/$p/$f" $p ;
+  done ;
+  
+  p=fontconfig ;
+  for f in fontconfig-2.11.1.tar.bz2 freetype-2.5.3.tar.bz2 \
     ; do
     [[ -e blobs/$p/$f ]] || execute bosh add blob "../blobs_to_add/$p/$f" $p ;
   done ;
@@ -185,14 +199,18 @@ EOF6b
   fi ;
   execute bosh upload release ;
   execute bosh deployment deployment_manifest.yml ;
-  execute bosh deploy ;
+  ( execute bosh deploy || true ) ;
 }
 get_logs() {
-  cd $(dirname $0) ;
-  rm -rf logs/* ; 
-  cd logs ; 
-    bosh logs jenkins_master 0 ; 
-    tar -xzf *.tgz ; 
+  # cd $(dirname $0) ;
+  echo "DEBUG: thisD=$thisD" ;
+  execute cd "$thisD" ;
+  pwd ;
+  ls -lart ;
+  rm -rf logs/* ;
+  execute cd logs ; 
+    execute bosh logs jenkins_master 0 ;
+    find . -type f -name '*.tgz' -exec tar -xzf {} \; ; 
   cd ..
 }
 
