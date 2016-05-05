@@ -28,9 +28,7 @@ execute() {
 }
 vexecute() {
   echo "$@" >> $elog ;
-  pwd ;
   "$@" | tee -a $elog || die "ERROR: execute: $@: $?" >> $elog ;
-  pwd ;
   echo >> $elog ;
 }
 lexecute() { execute "$@" >> $log
@@ -40,11 +38,15 @@ vlexecute() { vexecute "$@" >> $log
 
 # BEGIN GLOBAL VARIABLES
 tryOptsD='' ;
+relTryOptsD='' ;
 # END GLOBAL VARIABLES
 
 main() {
   [[ -e ../_code_opts ]] || ( cd .. && ln -s "$(basename $theseOptions)/" _code_opts ) ;
-  tryOptsD=`execute findTryOpts` ;
+  # tryOptsD=`execute findTryOpts` ;
+  findTryOpts ;
+  echo "Try options dir: '$tryOptsD' ." ;
+  echo "Relative: '$relTryOptsD' ." ;
   [[ $tryOptsD ]] || die "ERROR: Failed to find options trier." ;
   try_these_options ;
 }
@@ -52,39 +54,54 @@ findTryOpts() {
   if [[ $tryOptsD && -e $tryOptsD ]] ; then
     echo $tryOptsD ;
   else
-  local maxLoops=99 ;
-  local rel='.' ;
-  local readlink=$(readlink -f "$rel" 2>/dev/null || greadlink -f "$rel" ) ;
-  local lastReadlink='' ;
-  local loop=1 ;
-  while [[ ! -e "$rel/$tryOptsUtil" && $loop -lt $maxLoops && "$lastReadlink" != "$readlink" ]] ; do
-    loop=$((loop+1)) ;
-    rel="$rel/.." ;
-    lastReadlink=$readlink ;
-    readlink=$(readlink -f "$rel" 2>/dev/null || greadlink -f "$rel" ) ;
-    if [[ $DEBUG -gt 2 ]] ; then
-      local v='' ;
-      for v in loop rel readlink lastReadlink ; do
-        echo "DEBUG: $v '${!v}'" 1>&2 ;
-      done ;
-      echo 1>&2 ;
+    local maxLoops=99 ;
+    local rel='.' ;
+    local readlink=$(readlink -f "$rel" 2>/dev/null || greadlink -f "$rel" ) ;
+    local lastReadlink='' ;
+    local loop=1 ;
+    while [[ ! -e "$rel/$tryOptsUtil" && $loop -lt $maxLoops && "$lastReadlink" != "$readlink" ]] ; do
+      loop=$((loop+1)) ;
+      rel="$rel/.." ;
+      lastReadlink=$readlink ;
+      readlink=$(readlink -f "$rel" 2>/dev/null || greadlink -f "$rel" ) ;
+      if [[ $DEBUG -gt 2 ]] ; then
+        local v='' ;
+        for v in loop rel readlink lastReadlink ; do
+          echo "DEBUG: $v '${!v}'" 1>&2 ;
+        done ;
+        echo 1>&2 ;
+      fi ;
+    done ;
+    # [[ ! -e "$rel/$tryOptsUtil" ]] || echo "$readlink/$tryOptsUtil" ;
+    if [[ -e "$rel/$tryOptsUtil" ]] ; then
+      relTryOptsD="$rel/$tryOptsUtil" ;
+      echo "$readlink/$tryOptsUtil" ;
+      tryOptsD="$readlink/$tryOptsUtil" ;
+      echo "Try options dir: '$tryOptsD' ." 1>&2 ;
+      echo "Relative: '$relTryOptsD' ." 1>&2 ;
+    else
+      die "ERROR: Failed to find option-trier." ;
     fi ;
-  done ;
-  [[ ! -e "$rel/$tryOptsUtil" ]] || echo "$readlink/$tryOptsUtil" ;
   fi ;
 }
 try_these_options() {
   [[ -e $theseOptions ]] || die "WARNING: Stopping early because found no folder with these options (\$theseOptions, $theseOptions)." 0 ;
-  pwd ;
   [[ ! -e $builtOptions ]] || rm -rf $builtOptions ;
   execute mkdir $builtOptions ;
   # execute cd $builtOptions ;
+  ( echo "DEBUG: pwd before vexecute cd $thisD/$theseOptions:" ;
+    pwd ;
+  ) 1>&2 ;
   vexecute cd $thisD/$theseOptions ;
-  pwd ;
+  ( echo "DEBUG: pwd after vexecute cd $thisD/$theseOptions:" ;
+    pwd ;
+  ) 1>&2 ;
   cd $thisD/$theseOptions ;
-  pwd ;
+  ( echo "DEBUG: pwd after cd $thisD/$theseOptions:" ;
+    pwd ;
+  ) 1>&2 ;
   cat > build.props <<EOF1
-rsrc = $tryOptsD/rsrc
+rsrc = $relTryOptsD/rsrc
 EOF1
   cat > build.xml <<'EOF2'
 <project name="thisAntProj1" >
@@ -106,6 +123,7 @@ EOF2
   local permutation2='' ;
   local permutation1='' ;
   for permutation1 in CloudBees cloudfoundry-community ourScratch1 ; do
+    vexecute mkdir $thisD/$builtOptions/build_$permutation1 ;
     for permutation2 in v1 v2 ; do
       [[ ! -e $o ]] || rm $o ;
       execute cp $o.orig $o ;
@@ -118,7 +136,6 @@ EOF2
       echo "branch.$branch2 = $permutation2" >> $o ;
       [[ ! -e $o.$permutation1 ]] || cat $o.$permutation1 >> $o ;
       (vexecute ant clean build ) &> build.out.txt ;
-      vexecute mkdir $thisD/$builtOptions/build_$permutation1 ;
       execute mv $builtTmp $thisD/$builtOptions/build_$permutation1/$permutation2 ;
       execute cp $o $thisD/$builtOptions/build_$permutation1/$permutation2/ ;
       execute cp build.out.txt $thisD/$builtOptions/build_$permutation1/$permutation2/ ;
