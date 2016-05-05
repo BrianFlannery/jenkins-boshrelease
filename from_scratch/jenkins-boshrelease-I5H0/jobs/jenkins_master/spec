@@ -6,6 +6,8 @@ templates:
 packages:
 - jenkins_master_war
 - openjre_8
+- fontconfig
+- ttf_dejavu
 
 properties:
    jenkins_master.httpPort:
