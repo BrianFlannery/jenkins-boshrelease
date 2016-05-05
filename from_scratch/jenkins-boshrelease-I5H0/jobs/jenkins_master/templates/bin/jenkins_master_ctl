@@ -17,13 +17,19 @@ elog="$LOG_DIR/jenkins.stderr.log" ;
 
 die() { echo $1 ; exit 1 ;
 }
-execute() {
+_ex() {
   "$@" || die "ERROR: execute: $@: $?" ;
 }
-vexecute() {
+_vex() {
   echo "$@" ;
   "$@" || die "ERROR: vexecute: $@: $?" ;
   echo ;
+}
+execute() {
+  ( _ex "$@" 2>&1 ) >> $elog
+}
+vexecute() {
+  ( _vex "$@" 2>&1 ) >> $elog
 }
 
 case $1 in
@@ -42,10 +48,10 @@ case $1 in
         ( echo -e "\n\n" ; date ; echo ) &>> $l ;
       done ;
       
-      vexecute df -h &>> $elog ;
-      vexecute id &>> $elog ;
-      vexecute pwd &>> $elog ;
-      vexecute cat $0 &>> $elog ;
+      vexecute df -h  ;
+      vexecute id     ;
+      vexecute pwd    ;
+      vexecute cat $0 ;
     fi ;
     
     cd /var/vcap/packages/jenkins_master_war
@@ -54,15 +60,31 @@ case $1 in
       for d in / /home /home/vcap/ /usr /var /var/vcap/ /var/vcap/packages/ \
         /var/vcap/packages/openjre_8 \
         ; do
-        vexecute ls -lart "$d" &>> $elog || true ;
+        vexecute ls -lart "$d" || true ;
       done ;
     fi ;
-
+    
+    for package_bin_dir in $(ls -d /var/vcap/packages/*/*bin)
+    do
+      export PATH=${package_bin_dir}:$PATH
+    done
+    
     export JAVA_HOME=/var/vcap/packages/$jre
     export PATH=$JAVA_HOME/bin:$PATH
     [[ $PORT ]] || export PORT=<%= p('jenkins_master.httpPort') %>
+    
+    TTF_DIR=/usr/share/fonts/truetype
+    if [[ ! -d "$TTF_DIR/ttf_dejavu" ]] ; then
+      execute mkdir -p $TTF_DIR
+      execute cp -a /var/vcap/packages/ttf_dejavu/usr/share/fonts/truetype/* $TTF_DIR
+      vexecute /var/vcap/packages/fontconfig/bin/fc-cache --force
+    fi
 
+    # awtFlag='' ;
+    awtFlag='-Djava.awt.headless=true' ; # https://wiki.jenkins-ci.org/display/JENKINS/Jenkins+got+java.awt.headless+problem
+    
     exec chpst -v $JAVA_HOME/bin/java \
+      $awtFlag \
       -jar jenkins.war \
       --httpPort=$PORT \
       >>  $log \
