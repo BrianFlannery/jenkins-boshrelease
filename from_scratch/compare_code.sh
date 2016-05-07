@@ -166,7 +166,7 @@ main() {
 idem_make_files() {
   local pwd0=`pwd` ;
   execute cd $thisD/$theseOptions ;
-  cd $thisD/$theseOptions ;
+  cd $thisD/$theseOptions/obxml/strtr ;
   local f='' ;
   for f in ${filesShouldBeThere[@]}; do
     [[ -e "$f" ]] || [[ $DEBUG -lt 2 ]] || echo "idem_make_files: Making file '$f' .";
@@ -273,18 +273,18 @@ compare_them() {
   
   d1=~/dw/huge/unzip_cloudbees_j/releases/jenkins-2034/ ;
   d2=$thisD/$builtOptions/build_CloudBees/v1 ;
-  diff -r $d1 $d2 > $builtOptions/diff_CloudBees.txt ;
-  # diff -r $d1 $d2 | egrpe -v '' > diff_CloudBees.txt ;
+  diff -r $d1/ $d2/ > $builtOptions/diff_CloudBees.txt ;
+  # diff -r $d1/ $d2/ | egrpe -v '' > diff_CloudBees.txt ;
 
   d1=$thisD/.. ;
   d2=$thisD/$builtOptions/build_cloudfoundry-community/v1 ;
-  diff -r $d1 $d2 > $builtOptions/diff_cloudfoundry-community.txt ;
-  # diff -r $d1 $d2 | egrpe -v '' > diff_cloudfoundry-community.txt ;
+  diff -r $d1/ $d2/ > $builtOptions/diff_cloudfoundry-community.txt ;
+  # diff -r $d1/ $d2/ | egrpe -v '' > diff_cloudfoundry-community.txt ;
 
-  d1=$thisD/from_scratch ;
+  d1=$thisD ;
   d2=$thisD/$builtOptions/build_ourScratch1/v1 ;
-  diff -r $d1 $d2 > $builtOptions/diff_ourScratch1.txt ;
-  # diff -r $d1 $d2 | egrpe -v '' > diff_ourScratch1.txt ;
+  diff -r $d1/ $d2/ > $builtOptions/diff_ourScratch1.txt ;
+  # diff -r $d1/ $d2/ | egrpe -v '' > diff_ourScratch1.txt ;
 
 }
 
