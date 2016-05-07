@@ -9,6 +9,7 @@ builtOptions=../built_options ;
 builtTmp=build ;
 filesShouldBeThere=(
 ./jobs/jenkins_master/monit
+./jobs/jenkins_master/spec
 ./jobs/jenkins_master/templates/bin/jenkins_master_ctl
 ./jobs/jenkins_master/templates/config/jenkins_home/bosh-configuration.json.erb
 ./jobs/jenkins_master/templates/config/jenkins_home/config.xml.erb
@@ -152,7 +153,12 @@ tryOptsD='' ;
 relTryOptsD='' ;
 # END GLOBAL VARIABLES
 
+init() {
+  [[ ! -e $elog ]] || rm $elog ;
+  [[ ! -e $log ]] || rm $log ;
+}
 main() {
+  init ;
   [[ -e ../_code_opts ]] || ( cd .. && ln -s "$(basename $theseOptions)/" _code_opts ) ;
   # tryOptsD=`execute findTryOpts` ;
   findTryOpts ;
@@ -169,6 +175,7 @@ idem_make_files() {
   cd $thisD/$theseOptions/obxml/strtr ;
   local f='' ;
   for f in ${filesShouldBeThere[@]}; do
+    f="$f.xml"
     [[ -e "$f" ]] || [[ $DEBUG -lt 2 ]] || echo "idem_make_files: Making file '$f' .";
     local d=$(dirname "$f") ;
     [[ -e "$d" ]] || mkdir -p "$d" ;
@@ -257,10 +264,13 @@ EOF2
       echo "branch.$branch2 = $permutation2" >> $o ;
       [[ ! -e $trans.$permutation1 ]] || cat $trans.$permutation1 >> $trans.properties ;
       [[ ! -e $o.$permutation1 ]] || cat $o.$permutation1 >> $o ;
-      (vexecute ant clean build ) &> build.out.txt ;
+      ( export strtr_inventtrans=0 ;
+        vexecute ant clean build 
+      ) &> build.out.txt ;
       execute mv $builtTmp $thisD/$builtOptions/build_$permutation1/$permutation2 ;
       execute cp $o $thisD/$builtOptions/build_$permutation1/$permutation2/ ;
       execute cp build.out.txt $thisD/$builtOptions/build_$permutation1/$permutation2/ ;
+      ( cd $thisD/$builtOptions/build_$permutation1/$permutation2/ && ln -s .meta.strtr/ _strtr ) ;
     done ;
   done ;
   cp $o.orig $o ;
@@ -272,17 +282,17 @@ compare_them() {
   local d2='' ;
   
   d1=~/dw/huge/unzip_cloudbees_j/releases/jenkins-2034/ ;
-  d2=$thisD/$builtOptions/build_CloudBees/v1 ;
+  d2=$thisD/$builtOptions/build_CloudBees/v1/$builtTmp ;
   diff -r $d1/ $d2/ > $builtOptions/diff_CloudBees.txt ;
   # diff -r $d1/ $d2/ | egrpe -v '' > diff_CloudBees.txt ;
 
   d1=$thisD/.. ;
-  d2=$thisD/$builtOptions/build_cloudfoundry-community/v1 ;
+  d2=$thisD/$builtOptions/build_cloudfoundry-community/v1/$builtTmp ;
   diff -r $d1/ $d2/ > $builtOptions/diff_cloudfoundry-community.txt ;
   # diff -r $d1/ $d2/ | egrpe -v '' > diff_cloudfoundry-community.txt ;
 
-  d1=$thisD ;
-  d2=$thisD/$builtOptions/build_ourScratch1/v1 ;
+  d1=$thisD/jenkins-boshrelease-I5H0 ;
+  d2=$thisD/$builtOptions/build_ourScratch1/v1/$builtTmp ;
   diff -r $d1/ $d2/ > $builtOptions/diff_ourScratch1.txt ;
   # diff -r $d1/ $d2/ | egrpe -v '' > diff_ourScratch1.txt ;
 

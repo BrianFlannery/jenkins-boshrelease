@@ -1,0 +1,64 @@
+<OBXml>
+check process jenkins_master
+<branches field="source" >
+<branch value="ourScratch1" >
+  with pidfile /var/vcap/sys/run/jenkins_master/pid
+  start program "/var/vcap/jobs/jenkins_master/bin/ctl start"
+  stop program "/var/vcap/jobs/jenkins_master/bin/ctl stop"
+  group vcap
+  </branch>
+<branch value="CloudBees" >
+  with pidfile /var/vcap/sys/run/jenkins_master/jenkins_master.pid
+  start program "/var/vcap/jobs/jenkins_master/bin/monit_debugger jenkins_master_ctl '/var/vcap/jobs/jenkins_master/bin/jenkins_master_ctl start'"
+  stop program "/var/vcap/jobs/jenkins_master/bin/monit_debugger jenkins_master_ctl '/var/vcap/jobs/jenkins_master/bin/jenkins_master_ctl stop'"
+  group vcap
+</branch>
+<branch value="cloudfoundry-community" >
+  with pidfile /var/vcap/sys/run/jenkins_master/jenkins_master.pid
+  start program "/var/vcap/jobs/jenkins_master/bin/monit_debugger jenkins_master_ctl '/var/vcap/jobs/jenkins_master/bin/jenkins_master_ctl start'" with timeout 120 seconds
+  stop program "/var/vcap/jobs/jenkins_master/bin/monit_debugger jenkins_master_ctl '/var/vcap/jobs/jenkins_master/bin/jenkins_master_ctl stop'"
+  group vcap
+</branch>
+</branches>
+<branches field="source" >
+<branch value="ourScratch1" >
+</branch>
+<branch value="CloudBees" >
+check process haproxy
+  with pidfile /var/vcap/sys/run/jenkins_master/haproxy.pid
+  start program "/var/vcap/jobs/jenkins_master/bin/monit_debugger haproxy_ctl '/var/vcap/jobs/jenkins_master/bin/haproxy_ctl start'"
+  stop program "/var/vcap/jobs/jenkins_master/bin/monit_debugger haproxy_ctl '/var/vcap/jobs/jenkins_master/bin/haproxy_ctl stop'"
+  group vcap
+</branch>
+<branch value="cloudfoundry-community" >
+check process nginx_jenkins_master
+  with pidfile /var/vcap/sys/run/jenkins_master/nginx.pid
+  start program "/var/vcap/jobs/jenkins_master/bin/monit_debugger jenkins_master_nginx_ctl '/var/vcap/jobs/jenkins_master/bin/nginx_ctl start'"
+  stop program "/var/vcap/jobs/jenkins_master/bin/monit_debugger jenkins_master_nginx_ctl '/var/vcap/jobs/jenkins_master/bin/nginx_ctl stop'"
+  group vcap
+</branch>
+</branches>
+<branches field="source" >
+<branch value="ourScratch1" >
+</branch>
+<branch value="CloudBees" >
+<% if p("route_registrar.enabled") %>
+check process route_registrar
+ with pidfile /var/vcap/sys/run/jenkins_master/route_registrar.pid
+ start program "/var/vcap/jobs/jenkins_master/bin/monit_debugger route_registrar_ctl '/var/vcap/jobs/jenkins_master/bin/route_registrar_ctl start'" with timeout 10 seconds
+ stop program "/var/vcap/jobs/jenkins_master/bin/monit_debugger route_registrar_ctl '/var/vcap/jobs/jenkins_master/bin/route_registrar_ctl stop'" with timeout 10 seconds
+ group vcap
+<% end %>
+</branch>
+<branch value="cloudfoundry-community" >
+</branch>
+</branches>
+<branches field="source" >
+<branch value="ourScratch1" >
+</branch>
+<branch value="CloudBees" >
+</branch>
+<branch value="cloudfoundry-community" >
+</branch>
+</branches>
+</OBXml>

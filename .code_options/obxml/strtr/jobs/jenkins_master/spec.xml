@@ -1,0 +1,86 @@
+<OBXml>
+---
+name: jenkins_master
+packages:
+<branches field="source" >
+<branch value="ourScratch1" >
+- jenkins_master_war
+- openjre_8
+- fontconfig
+- ttf_dejavu
+</branch>
+<branch value="CloudBees" >
+- jenkins
+- openjdk-8
+- ttf-dejavu
+- fontconfig
+- haproxy
+- git
+- maven
+- route-registrar
+- jenkins-init-script
+- ruby
+- cloudfoundry-cli
+- syslog_aggregator
+</branch>
+<branch value="cloudfoundry-community" >
+- jenkins
+- jre
+- nginx
+- git
+- cf-cli
+- bosh-cli
+- ruby
+- golang1.3
+</branch>
+</branches>
+templates:
+<branches field="source" >
+<branch value="ourScratch1" >
+  # bin/jenkins_master_ctl: bin/ctl
+  bin/jenkins_master_ctl: bin/jenkins_master_ctl
+</branch>
+<branch value="CloudBees" >
+</branch>
+<branch value="cloudfoundry-community" >
+  bin/jenkins_master_ctl: bin/jenkins_master_ctl
+  bin/monit_debugger: bin/monit_debugger
+  bin/nginx_ctl: bin/nginx_ctl
+  data/properties.sh.erb: data/properties.sh
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+  config/nginx.conf.erb: config/nginx.conf
+  config/mime.types: config/mime.types
+</branch>
+</branches>
+</branches>
+<branches field="source" >
+<branch value="ourScratch1" >
+</branch>
+<branch value="CloudBees" >
+</branch>
+<branch value="cloudfoundry-community" >
+</branch>
+</branches>
+</branches>
+properties:
+<branches field="source" >
+<branch value="ourScratch1" >
+   jenkins_master.httpPort:
+     description: HTTP Port
+     default: 8081
+</branch>
+<branch value="CloudBees" >
+</branch>
+<branch value="cloudfoundry-community" >
+  jenkins.admin.password:
+    description: Admin user password
+  jenkins.server.internal_http_port:
+    description: "Internal http port between nginx & jenkins"
+    default: 8088
+  jenkins.server.ajp13_port:
+    description: AJP13 protocal port
+    default: 8009
+</branch>
+</branches>
+</OBXml>

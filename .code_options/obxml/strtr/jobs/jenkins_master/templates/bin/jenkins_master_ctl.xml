@@ -1,7 +1,30 @@
-<OBXml><branches field="source" >
+<OBXml>#!/bin/bash -eu
+<branches field="source" >
 <branch value="ourScratch1" >
-#!/bin/bash
-
+</branch>
+<branch value="CloudBees" >
+</branch>
+<branch value="cloudfoundry-community" >
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+</branch>
+</branches>
+# Setup env vars and folders for the <branches field="source" >
+<branch value="ourScratch1" ></branch>
+<branch value="CloudBees" ></branch>
+<branch value="cloudfoundry-community" >webapp_ctl </branch>
+</branches>script
+<branches field="source" >
+<branch value="ourScratch1" >
+</branch>
+<branch value="CloudBees" >
+cd $(dirname ${BASH_SOURCE[0]})/..
+</branch>
+<branch value="cloudfoundry-community" >
+</branch>
+</branches>
+<branches field="source" >
+<branch value="ourScratch1" >
 DEBUG=2 ;
 jre=openjre_8 ;
 j=jenkins_master
@@ -15,8 +38,34 @@ elog="$LOG_DIR/jenkins.stderr.log" ;
 # [[ $JENKINS_HOME ]] || export JENKINS_HOME=/home/vcap/.jenkins ;
 # [[ $JENKINS_HOME ]] || export JENKINS_HOME=/home/vcap/$j ;
 # [[ $JENKINS_HOME ]] || export JENKINS_HOME=/var/vcap/store/$j ;
+</branch>
+<branch value="CloudBees" >
+JOB_NAME=$(basename $PWD)
+JOB_DIR=/var/vcap/jobs/$JOB_NAME
+source $JOB_DIR/helpers/ctl_setup.sh $JOB_NAME
 
+export PORT=${PORT:-8090}
+export LANG=en_US.UTF-8
+</branch>
+<branch value="cloudfoundry-community" >
+# Setup env vars and folders for the webapp_ctl script
+source /var/vcap/jobs/jenkins_master/helpers/ctl_setup.sh 'jenkins_master'
 
+export PATH=/var/vcap/packages/git/bin:$PATH
+export PATH=/var/vcap/packages/cf-cli/bin:$PATH
+export PATH=/var/vcap/packages/bosh-cli/bin:$PATH
+export GOROOT=$(readlink -nf /var/vcap/packages/golang1.3)
+export PATH=$GOROOT/bin:$PATH
+export GEM_PATH=/var/vcap/packages/bosh-cli/vendor/bundle/ruby/2.2.0
+
+export LANG=en_US.UTF-8
+export JENKINS_HOME=/var/vcap/store/jenkins_master
+java_binary=/var/vcap/packages/jre/bin/java
+jenkins_war=/var/vcap/packages/jenkins/jenkins.war
+</branch>
+</branches>
+<branches field="source" >
+<branch value="ourScratch1" >
 die() { echo $1 ; exit 1 ;
 }
 _ex() {
@@ -33,10 +82,30 @@ execute() {
 vexecute() {
   _vex "$@" 2>&amp;1 >> $elog
 }
+</branch>
+<branch value="CloudBees" >
+link_directory_erase_dest_if_exist() {
+  source_file=$1
+  dest_file=$2
+  if [ -d $dest_file ]; then
+    rm -rf $dest_file
+  fi
+  ln -nfs $1 $2
+}
 
+link_groovy_init_script() {
+  name=$1
+  link_directory_erase_dest_if_exist /var/vcap/packages/jenkins-init-script/$name $JENKINS_HOME/$name
+}
+</branch>
+<branch value="cloudfoundry-community" >
+</branch>
+</branches>
 case $1 in
 
   start)
+<branches field="source" >
+<branch value="ourScratch1" >
     # mkdir -p $RUN_DIR $LOG_DIR $JENKINS_HOME
     # chown -R vcap:vcap $RUN_DIR $LOG_DIR $JENKINS_HOME
     for d in $RUN_DIR $LOG_DIR $JENKINS_HOME ; do
@@ -81,48 +150,160 @@ case $1 in
       execute cp -a /var/vcap/packages/ttf_dejavu/usr/share/fonts/truetype/* $TTF_DIR
       vexecute /var/vcap/packages/fontconfig/bin/fc-cache --force
     fi
+</branch>
+<branch value="CloudBees" >
+    pid_guard $PIDFILE $JOB_NAME
 
+    # store pid in $PIDFILE
+    echo $$ > $PIDFILE
+
+    export JAVA_HOME=/var/vcap/packages/openjdk-8
+    export JENKINS_HOME=$STORE_DIR
+    export MVN_HOME=/var/vcap/packages/maven
+    export PATH=/var/vcap/packages/buildpacks/bin:$PATH
+
+    JENKINS_HOME_TEMPLATE=$JOB_DIR/jenkins_home_template
+
+    echo "Use JENKINS_HOME: $JENKINS_HOME"
+
+    #configure rsyslog
+    /var/vcap/packages/syslog_aggregator/setup_syslog_forwarder.sh $JOB_DIR/config/syslog_aggregator
+    #sleep 5 #sleeping for 5 seconds to give rsyslod service time to start so Jenkins can hook up
+
+    echo "DEPLOY GROOVY INIT SCRIPTS"
+    for directory in /var/vcap/packages/jenkins-init-script/*.groovy.d
+    do
+      link_groovy_init_script $(basename $directory)
+    done
+
+    # COPY JENKINS HOME TEMPLATE CONFIG
+    mkdir -p $JENKINS_HOME
+    if [ -r "$JENKINS_HOME/config.xml" ]; then
+      echo "JENKINS_HOME/config.xml already exists. Don't overwrite JENKINS_HOME with template configuration."
+    else
+      echo "Copy content of $JENKINS_HOME_TEMPLATE to $JENKINS_HOME ..."
+      # "/." is necessary otherwise it copies the folder itself into the $JENKINS_HOME folder
+      cp -ar $JENKINS_HOME_TEMPLATE/. $JENKINS_HOME
+    fi
+
+    echo "DEPLOY NEW BUILT-IN CONFIG (bosh-configuration.json)"
+    cp -f $JENKINS_HOME_TEMPLATE/bosh-configuration.json $JENKINS_HOME/bosh-configuration.json
+    cp -f $JENKINS_HOME_TEMPLATE/registration-details.json $JENKINS_HOME/registration-details.json
+
+    JENKINS_DEFAULT_PLUGINS=/var/vcap/packages/jenkins/plugins
+    echo "Linking default plugins-to-install from $JENKINS_DEFAULT_PLUGINS/ to $JENKINS_HOME/plugins-to-install ..."
+    link_directory_erase_dest_if_exist $JENKINS_DEFAULT_PLUGINS $JENKINS_HOME/plugins-to-install
+
+
+    TTF_DIR=/usr/share/fonts/truetype
+    if [ -d "$TTF_DIR/ttf-dejavu" ]; then
+      echo "$TTF_DIR/ttf-dejavu already exists. Don't recopy fonts."
+    else
+      mkdir -p $TTF_DIR
+      cp -a /var/vcap/packages/ttf-dejavu/apt/usr/share/fonts/truetype/* $TTF_DIR
+      echo "ttf-dejavu fonts copied"
+      /var/vcap/packages/fontconfig/bin/fc-cache --force
+    fi
+
+    # SET VCAP OWNER OF JENKINS_HOME
+    chown -Rf vcap:vcap $JENKINS_HOME
+
+    # unpin plugins in .war we want to update through the pcf package
+    rm -f $JENKINS_HOME/plugins/maven-plugin.*.pinned \
+          $JENKINS_HOME/plugins/cloudbees-support.*.pinned
+</branch>
+<branch value="cloudfoundry-community" >
+    pid_guard $PIDFILE $JOB_NAME
+
+    echo $$ > $PIDFILE
+
+    mkdir -p $JENKINS_HOME
+
+</branch>
+</branches>
+<branches field="source" >
+<branch value="ourScratch1" >
     # awtFlag='' ;
     awtFlag='-Djava.awt.headless=true' ; # https://wiki.jenkins-ci.org/display/JENKINS/Jenkins+got+java.awt.headless+problem
-    
+</branch>
+<branch value="CloudBees" >
+    flags=(
+      -Dhudson.TcpSlaveAgentListener.hostName="&lt;%= spec.networks.default.ip %>"
+      -Djava.io.tmpdir="$TMPDIR"
+      -Djava.awt.headless=true
+      &lt;% if_p("jenkins.oc_ip") do |oc_ip| %>
+      -DMASTER_ENDPOINT="http://&lt;%= spec.networks.default.ip %>"
+      -DMASTER_OPERATIONSCENTER_ENDPOINT="http://&lt;%= oc_ip %>"
+      -DMASTER_INDEX="&lt;%= index %>"
+      -DMASTER_NAME="jenkins-&lt;%= index %>%20(built-in)"
+      -DMASTER_GRANT_ID="jenkins-&lt;%= index %>"
+      &lt;% end %>
+      -jar /var/vcap/packages/jenkins/jenkins.war
+      --httpPort=$PORT
+    )
+</branch>
+<branch value="cloudfoundry-community" >
+    flags=(
+      -Djava.io.tmpdir="$TMPDIR"
+      -jar $jenkins_war
+      --argumentsRealm.passwd.$ADMIN_USER=$ADMIN_PASSWORD
+      --argumentsRealm.roles.$ADMIN_USER=admin
+      --httpPort=$PORT
+      --ajp13Port=$AJP13_PORT # unless ssl
+    )
+
+    # if [[ -n "$HTTPS_PORT" &amp;&amp; -s "$HTTPS_KEYSTORE_FILE" ]]
+    # then
+    #   flags+=(
+    #     --httpsPort=$HTTPS_PORT
+    #     --httpsKeyStore="$HTTPS_KEYSTORE_FILE"
+    #     --httpsKeyStorePassword="$HTTPS_KEYSTORE_PASSWORD"
+    #     --ajp13Port="-1"
+    #   )
+    # fi
+</branch>
+</branches>
+
+<branches field="source" >
+<branch value="ourScratch1" >
     exec chpst -v $JAVA_HOME/bin/java \
       $awtFlag \
       -jar jenkins.war \
       --httpPort=$PORT \
       >>  $log \
       2>> $elog
+</branch>
+<branch value="CloudBees" >
+    exec chpst -v -u vcap:vcap $JAVA_HOME/bin/java $JVM_ARGS ${flags[*]} \
+         >>$LOG_DIR/$JOB_NAME.stdout.log \
+         2>>$LOG_DIR/$JOB_NAME.stderr.log
+</branch>
+<branch value="cloudfoundry-community" >
+    exec chpst -u vcap:vcap $java_binary ${flags[*]} \
+         >>$LOG_DIR/$JOB_NAME.stdout.log \
+         2>>$LOG_DIR/$JOB_NAME.stderr.log
+</branch>
+</branches>
 
     ;;
 
   stop)
-    kill -9 `cat $PIDFILE`
-    rm -f $PIDFILE
+    kill_and_wait $PIDFILE
+
+    ;;
+  *)
+    echo "Usage: $0 {start|stop}"
 
     ;;
 
-  *)
-    echo "Usage: ctl {start|stop}" ;;
-
 esac
-
-#
+exit 0
+<branches field="source" >
+<branch value="ourScratch1" >
 </branch>
 <branch value="CloudBees" >
-  
 </branch>
 <branch value="cloudfoundry-community" >
-
 </branch>
 </branches>
-<olli> Explicit serial clause (with intentional indent 1).</olli>
-Implicit serial clause 2. (indent 0)
-<obxmlul>
-<li>Order not important. (indent 0)
-</li>xxx1
-<li> Only life important. (indent 1)
-</li>xxx2
-<li>(Parallel clause 3.)  (indent 0, outdent 2)  
-</li>xxx3
-</obxmlul>
-
 </OBXml>
