@@ -1,0 +1,10 @@
+<OBXml>
+<branches field="source" >
+<branch value="ourScratch1" >
+</branch>
+<branch value="CloudBees" >
+</branch>
+<branch value="cloudfoundry-community" >
+</branch>
+</branches>
+</OBXml>

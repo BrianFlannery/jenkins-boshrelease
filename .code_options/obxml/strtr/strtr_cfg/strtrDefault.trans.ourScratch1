@@ -1,3 +1,8 @@
 jobs : jobs
 packages : packages
 openjdkjredir : openjre
+nginx : apache_httpd
+configFile1 : empty
+configFile1Ext : config
+configFile2 : empty
+configFile2Ext : config

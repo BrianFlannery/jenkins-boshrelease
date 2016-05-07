@@ -42,13 +42,13 @@ check process nginx_jenkins_master
 <branch value="ourScratch1" >
 </branch>
 <branch value="CloudBees" >
-<% if p("route_registrar.enabled") %>
+&lt;% if p("route_registrar.enabled") %>
 check process route_registrar
  with pidfile /var/vcap/sys/run/jenkins_master/route_registrar.pid
  start program "/var/vcap/jobs/jenkins_master/bin/monit_debugger route_registrar_ctl '/var/vcap/jobs/jenkins_master/bin/route_registrar_ctl start'" with timeout 10 seconds
  stop program "/var/vcap/jobs/jenkins_master/bin/monit_debugger route_registrar_ctl '/var/vcap/jobs/jenkins_master/bin/route_registrar_ctl stop'" with timeout 10 seconds
  group vcap
-<% end %>
+&lt;% end %>
 </branch>
 <branch value="cloudfoundry-community" >
 </branch>

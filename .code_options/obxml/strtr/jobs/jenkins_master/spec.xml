@@ -41,6 +41,25 @@ templates:
   bin/jenkins_master_ctl: bin/jenkins_master_ctl
 </branch>
 <branch value="CloudBees" >
+  bin/monit_debugger: bin/monit_debugger
+  data/properties.sh.erb: data/properties.sh
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+
+  bin/jenkins_master_ctl: bin/jenkins_master_ctl
+  config/jenkins_home/bosh-configuration.json.erb: jenkins_home_template/bosh-configuration.json
+  config/jenkins_home/cloudbees-referrer.txt: jenkins_home_template/.cloudbees-referrer.txt
+  config/jenkins_home/config.xml.erb: jenkins_home_template/config.xml
+  config/jenkins_home/registration-details.json.erb: jenkins_home_template/registration-details.json
+
+  bin/route_registrar_ctl: bin/route_registrar_ctl
+  config/route_registrar/registrar_settings.yml.erb: config/route_registrar/registrar_settings.yml
+
+  config/syslog_aggregator/syslog_forwarder.conf.erb: config/syslog_aggregator/syslog_forwarder.conf
+
+  bin/haproxy_ctl: bin/haproxy_ctl
+  config/haproxy/haproxy.config.erb: config/haproxy/haproxy.config
+  config/haproxy/ssl.pem.erb: config/haproxy/ssl.pem
 </branch>
 <branch value="cloudfoundry-community" >
   bin/jenkins_master_ctl: bin/jenkins_master_ctl
@@ -53,16 +72,6 @@ templates:
   config/mime.types: config/mime.types
 </branch>
 </branches>
-</branches>
-<branches field="source" >
-<branch value="ourScratch1" >
-</branch>
-<branch value="CloudBees" >
-</branch>
-<branch value="cloudfoundry-community" >
-</branch>
-</branches>
-</branches>
 properties:
 <branches field="source" >
 <branch value="ourScratch1" >
@@ -71,6 +80,112 @@ properties:
      default: 8081
 </branch>
 <branch value="CloudBees" >
+  jenkins.server.internal_http_port:
+    description: "Jenkins listen port"
+    default: 8080
+  jenkins.jvm_args:
+    description: "Jenkins extra JVM arguments"
+    default: ""
+  jenkins.master_ssh_private_key:
+    description: "SSH private key used by the jenkins master to SSH to the linux Jenkins Slave"
+  jenkins.slave_ips:
+    description: "IP addresses of the slaves"
+    default: []
+  jenkins.master_ips:
+    description: "IP addresses of the masters"
+  jenkins.oc_ip:
+    description: "IP address of the Operations Center"
+  jenkins.security.dev_mode:
+    description: "Disable SSO"
+    value: "false"
+  jenkins.security.groups.uaa_groups_whitelist:
+    description: "list of UAA groups that are loaded as groups of a jenkins user when he logs-in if he is a member of them in UAA. Format: line break separated regular expressions"
+    default: "cloud_controller\\.admin"
+  jenkins.security.groups.group_admins:
+    description: "group of Admins"
+    default: "cloud_controller.admin"
+  jenkins.license.name:
+    description: Name to be used for the Jenkins Cloudbees license
+  jenkins.license.first_name:
+    description: First name to be used for the Jenkins Cloudbees license
+  jenkins.license.last_name:
+      description: First name to be used for the Jenkins Cloudbees license
+  jenkins.license.email:
+    description: E-mail address to be used for the Jenkins Cloudbees license
+  jenkins.license.organization:
+    description: Organization name to be used for the Jenkins Cloudbees license
+  jenkins.network:
+    description: VLAN of the public IP address of the master, used to register a DNS CNAME
+    default: "default"
+  jenkins.identifierPrefix:
+    description: identifier to differentiate between cjce and cjoc properties
+    default: ""
+  jenkins.viewDescription:
+    description: view description to tell the user how to start working
+    default: ""
+
+  cf.domain:
+    description: "Domain shared by the UAA and CF API eg '10.244.0.34.xip.io'"
+
+  dns_backward_compatible_domain_name:
+    description:
+    default: false
+
+  uaa.client_id:
+    description: Jenkins OAuth2 client id
+  uaa.client_secret:
+    description: Jenkins OAuth2 client secret
+  uaa.admin_client_id:
+    description: Client ID used for adding the above Jenkins client
+  uaa.admin_client_secret:
+    description: Client Secret used for adding the above Jenkins client
+  uaa.uaa_server_endpoint:
+    description: URL of the UAA app
+  uaa.login_server_endpoint:
+    description: URL of the UAA Login App
+  uaa.api_server_endpoint:
+    description: URL of the API App to retrieve the orgs to whom the user belongs to
+
+  nats.host:
+    description: Hostname/IP of NATS
+  nats.port:
+    description: Port that NATS listens on
+  nats.username:
+    description: The user to use when authenticating with NATS
+  nats.password:
+    description: The password to use when authenticating with NATS
+
+  syslog_aggregator.address:
+    description: "IP address for syslog aggregator"
+  syslog_aggregator.port:
+    description: "UDP port of syslog aggregator"
+
+  syslog.host:
+    default: localhost
+  syslog.port:
+    default: 514
+  syslog.transport:
+    default: UDP
+  syslog.app:
+    description: Name of the application to log
+  syslog.messageHostname:
+    description: Network default IP
+  syslog.messageFormat:
+    default: "RFC_3164"
+
+  request_timeout_in_seconds:
+    default: 900
+    description: "Server and client timeouts in seconds"
+
+  haproxy.ssl_enabled:
+    default: false
+  haproxy.cert_and_private_key_pems:
+    default:
+    description: "Certificate Signing Request"
+
+  route_registrar:
+    enabled: false
+
 </branch>
 <branch value="cloudfoundry-community" >
   jenkins.admin.password:
@@ -81,6 +196,14 @@ properties:
   jenkins.server.ajp13_port:
     description: AJP13 protocal port
     default: 8009
+</branch>
+</branches>
+<branches field="source" >
+<branch value="ourScratch1" >
+</branch>
+<branch value="CloudBees" >
+</branch>
+<branch value="cloudfoundry-community" >
 </branch>
 </branches>
 </OBXml>
