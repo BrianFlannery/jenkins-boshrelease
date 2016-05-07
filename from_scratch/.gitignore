@@ -1,2 +1,3 @@
 blobs_to_add
 *.log.stderr
+logs

@@ -1,7 +1,8 @@
 ---
 name: jenkins_master
 templates:
-  ctl.erb: bin/ctl
+  # bin/jenkins_master_ctl: bin/ctl
+  bin/jenkins_master_ctl: bin/jenkins_master_ctl
   
 packages:
 - jenkins_master_war

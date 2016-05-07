@@ -1,3 +1,5 @@
+<OBXml><branches field="source" >
+<branch value="ourScratch1" >
 #!/bin/bash
 
 DEBUG=2 ;
@@ -26,10 +28,10 @@ _vex() {
   echo ;
 }
 execute() {
-  _ex "$@" 2>&1 >> $elog
+  _ex "$@" 2>&amp;1 >> $elog
 }
 vexecute() {
-  _vex "$@" 2>&1 >> $elog
+  _vex "$@" 2>&amp;1 >> $elog
 }
 
 case $1 in
@@ -45,7 +47,7 @@ case $1 in
 
     if [[ $DEBUG -gt 1 ]] ; then
       for l in "$log" "$elog" ; do
-        ( ( echo -e "\n\n" ; date ; echo ) 2>&1 ) >> $l ;
+        ( ( echo -e "\n\n" ; date ; echo ) 2>&amp;1 ) >> $l ;
       done ;
       
       vexecute df -h  ;
@@ -71,7 +73,7 @@ case $1 in
     
     export JAVA_HOME=/var/vcap/packages/$jre
     export PATH=$JAVA_HOME/bin:$PATH
-    [[ $PORT ]] || export PORT=<%= p('jenkins_master.httpPort') %>
+    [[ $PORT ]] || export PORT=&lt;%= p('jenkins_master.httpPort') %>
     
     TTF_DIR=/usr/share/fonts/truetype
     if [[ ! -d "$TTF_DIR/ttf_dejavu" ]] ; then
@@ -104,3 +106,23 @@ case $1 in
 esac
 
 #
+</branch>
+<branch value="CloudBees" >
+  
+</branch>
+<branch value="cloudfoundry-community" >
+
+</branch>
+</branches>
+<olli> Explicit serial clause (with intentional indent 1).</olli>
+Implicit serial clause 2. (indent 0)
+<obxmlul>
+<li>Order not important. (indent 0)
+</li>xxx1
+<li> Only life important. (indent 1)
+</li>xxx2
+<li>(Parallel clause 3.)  (indent 0, outdent 2)  
+</li>xxx3
+</obxmlul>
+
+</OBXml>

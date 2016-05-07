@@ -208,6 +208,7 @@ get_logs() {
   pwd ;
   ls -lart ;
   rm -rf logs/* ;
+  [[ -e logs ]] || execute mkdir logs ;
   execute cd logs ; 
     execute bosh logs jenkins_master 0 ;
     find . -type f -name '*.tgz' -exec tar -xzf {} \; ; 
