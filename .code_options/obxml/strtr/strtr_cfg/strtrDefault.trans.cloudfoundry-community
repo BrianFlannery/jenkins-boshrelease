@@ -6,3 +6,5 @@ configFile1 : mime
 configFile1Ext : types
 configFile2 : empty
 configFile2Ext : config
+var_vcap_packages_jre_java_home : jre
+pidfile_output_label : JOB_NAME

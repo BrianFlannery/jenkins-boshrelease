@@ -6,3 +6,5 @@ configFile1 : mime
 configFile1Ext : types
 configFile2 : ssl
 configFile2Ext : pem.erb
+var_vcap_packages_jre_java_home : java7
+pidfile_output_label : output_label

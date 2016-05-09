@@ -1,10 +1,11 @@
-<OBXml>
-<branches field="source" >
-<branch value="ourScratch1" >
-</branch>
-<branch value="CloudBees" >
+<OBXml><branches field="env_bash" >
+<branch value="bash_eu" >
 #!/bin/bash -eu
-
+</branch>
+<branch value="env_bash" >
+#!/usr/bin/env bash
+</branch>
+</branches>
 # Setup env vars and folders for the ctl script
 # This helps keep the ctl script as readable
 # as possible
@@ -15,9 +16,33 @@
 # source /var/vcap/jobs/foobar/helpers/ctl_setup.sh foobar foobar
 # source /var/vcap/jobs/foobar/helpers/ctl_setup.sh foobar nginx
 
+<branches field="env_bash" >
+<branch value="bash_eu" >
+</branch>
+<branch value="env_bash" >
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+</branch>
+</branches>
+
 JOB_NAME=$1
+<branches field="env_bash" >
+<branch value="bash_eu" >
+</branch>
+<branch value="env_bash" >
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+</branch>
+</branches>
+<branches field="bash_arg_cascade" >
+<branch value="fancy" >
 #the following will assign 3rd or 2nd or 1st argument as output label
 output_label=${3:-`echo ${2:-$1}`}
+</branch>
+<branch value="straightforward" >
+output_label=${1:-JOB_NAME}
+</branch>
+</branches>
 
 export JOB_DIR=/var/vcap/jobs/$JOB_NAME
 
@@ -68,99 +93,26 @@ then
   export PYTHONPATH=$WEBAPP_DIR/vendor/lib/python
 fi
 
-if [[ -d /var/vcap/packages/java7 ]]
+if [[ -d /var/vcap/packages/var_vcap_packages_jre_java_home ]]
 then
-  export JAVA_HOME="/var/vcap/packages/java7"
+  export JAVA_HOME="/var/vcap/packages/var_vcap_packages_jre_java_home"
 fi
 
+<branches field="jenkins_master_classpath" >
+<branch value="ctl_setup">  
 # setup CLASSPATH for all jars/ folders within packages
 export CLASSPATH=${CLASSPATH:-''} # default to empty
 for java_jar in $(ls -d /var/vcap/packages/*/*/*.jar)
 do
   export CLASSPATH=${java_jar}:$CLASSPATH
 done
-
-PIDFILE=$RUN_DIR/$output_label.pid
-
-echo '$PATH' $PATH
 </branch>
-<branch value="cloudfoundry-community" >
-#!/usr/bin/env bash
-
-# Setup env vars and folders for the ctl script
-# This helps keep the ctl script as readable
-# as possible
-
-# Usage options:
-# source /var/vcap/jobs/foobar/helpers/ctl_setup.sh JOB_NAME OUTPUT_LABEL
-# source /var/vcap/jobs/foobar/helpers/ctl_setup.sh foobar
-# source /var/vcap/jobs/foobar/helpers/ctl_setup.sh foobar foobar
-# source /var/vcap/jobs/foobar/helpers/ctl_setup.sh foobar nginx
-
-set -e # exit immediately if a simple command exits with a non-zero status
-set -u # report the usage of uninitialized variables
-
-JOB_NAME=$1
-output_label=${1:-JOB_NAME}
-
-export JOB_DIR=/var/vcap/jobs/$JOB_NAME
-chmod 755 $JOB_DIR # to access file via symlink
-
-# Load some bosh deployment properties into env vars
-# Try to put all ERb into data/properties.sh.erb
-# incl $NAME, $JOB_INDEX, $WEBAPP_DIR
-source $JOB_DIR/data/properties.sh
-
-source $JOB_DIR/helpers/ctl_utils.sh
-redirect_output ${output_label}
-
-export HOME=${HOME:-/home/vcap}
-
-# Add all packages' /bin &amp; /sbin into $PATH
-for package_bin_dir in $(ls -d /var/vcap/packages/*/*bin)
-do
-  export PATH=${package_bin_dir}:$PATH
-done
-
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-''} # default to empty
-for package_bin_dir in $(ls -d /var/vcap/packages/*/lib)
-do
-  export LD_LIBRARY_PATH=${package_bin_dir}:$LD_LIBRARY_PATH
-done
-
-# Setup log, run and tmp folders
-
-export RUN_DIR=/var/vcap/sys/run/$JOB_NAME
-export LOG_DIR=/var/vcap/sys/log/$JOB_NAME
-export TMP_DIR=/var/vcap/sys/tmp/$JOB_NAME
-export STORE_DIR=/var/vcap/store/$JOB_NAME
-for dir in $RUN_DIR $LOG_DIR $TMP_DIR $STORE_DIR
-do
-  mkdir -p ${dir}
-  chown vcap:vcap ${dir}
-  chmod 775 ${dir}
-done
-export TMPDIR=$TMP_DIR
-
-export C_INCLUDE_PATH=/var/vcap/packages/mysqlclient/include/mysql:/var/vcap/packages/sqlite/include:/var/vcap/packages/libpq/include
-export LIBRARY_PATH=/var/vcap/packages/mysqlclient/lib/mysql:/var/vcap/packages/sqlite/lib:/var/vcap/packages/libpq/lib
-
-# consistent place for vendoring python libraries within package
-if [[ -d ${WEBAPP_DIR:-/xxxx} ]]
-then
-  export PYTHONPATH=$WEBAPP_DIR/vendor/lib/python
-fi
-
-if [[ -d /var/vcap/packages/jre ]]
-then
-  export JAVA_HOME="/var/vcap/packages/jre"
-fi
-
-export PIDFILE=$RUN_DIR/$JOB_NAME.pid
-
-echo '$PATH' $PATH
+<branch value="none">
 </branch>
 </branches>
+<branches field="jenkins_master_export_pidfile" ><branch value="export" >export </branch><branch value="not_exported" ></branch></branches>PIDFILE=$RUN_DIR/$pidfile_output_label.pid
+
+echo '$PATH' $PATH
 <branches field="source" >
 <branch value="ourScratch1" >
 </branch>
