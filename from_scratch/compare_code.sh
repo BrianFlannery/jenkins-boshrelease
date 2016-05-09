@@ -16,11 +16,15 @@ filesShouldBeThere=(
 ./jobs/jenkins_master/templates/data/properties.sh.erb
 ./jobs/jenkins_master/templates/helpers/ctl_setup.sh
 ./jobs/jenkins_master/templates/helpers/ctl_utils.sh
-./packages/jenkins/packaging
+./packages/jenkins_master_war/packaging
+./packages/jenkins_master_war/spec
 ./packages/openjdkjredir/packaging
+./packages/openjdkjredir/spec
 ./packages/ttf_dejavu_dir/apt/ttf-dejavu/profile.sh
 ./packages/ttf_dejavu_dir/packaging
+./packages/ttf_dejavu_dir/spec
 ./packages/fontconfig/packaging
+./packages/fontconfig/spec
 ) ;
 if [[ '' ]] ; then
 ./NOTICE
@@ -283,19 +287,22 @@ compare_them() {
   
   d1=~/dw/huge/unzip_cloudbees_j/releases/jenkins-2034/ ;
   d2=$thisD/$builtOptions/build_CloudBees/v1/$builtTmp ;
-  diff -r $d1/ $d2/ > $builtOptions/diff_CloudBees.txt ;
+  Diff -r $d1/ $d2/ > $builtOptions/diff_CloudBees.txt ;
   # diff -r $d1/ $d2/ | egrpe -v '' > diff_CloudBees.txt ;
 
   d1=$thisD/.. ;
   d2=$thisD/$builtOptions/build_cloudfoundry-community/v1/$builtTmp ;
-  diff -r $d1/ $d2/ > $builtOptions/diff_cloudfoundry-community.txt ;
+  Diff -r $d1/ $d2/ > $builtOptions/diff_cloudfoundry-community.txt ;
   # diff -r $d1/ $d2/ | egrpe -v '' > diff_cloudfoundry-community.txt ;
 
   d1=$thisD/jenkins-boshrelease-I5H0 ;
   d2=$thisD/$builtOptions/build_ourScratch1/v1/$builtTmp ;
-  diff -r $d1/ $d2/ > $builtOptions/diff_ourScratch1.txt ;
+  Diff -r $d1/ $d2/ > $builtOptions/diff_ourScratch1.txt ;
   # diff -r $d1/ $d2/ | egrpe -v '' > diff_ourScratch1.txt ;
 
+}
+Diff() {
+  diff -r $1 $2 | perl -ne 'if ( /^(diff|Only)/ ) { print $_ } elsif ( /^[<>]/ ) { print "    $_" } else { print "  $_" }'
 }
 
 
