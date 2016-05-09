@@ -191,7 +191,7 @@ properties:
   jenkins.admin.password:
     description: Admin user password
   jenkins.server.internal_http_port:
-    description: "Internal http port between nginx & jenkins"
+    description: "Internal http port between nginx &amp; jenkins"
     default: 8088
   jenkins.server.ajp13_port:
     description: AJP13 protocal port

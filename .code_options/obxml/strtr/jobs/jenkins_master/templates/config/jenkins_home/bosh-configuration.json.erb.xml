@@ -3,6 +3,57 @@
 <branch value="ourScratch1" >
 </branch>
 <branch value="CloudBees" >
+&lt;%=
+  require 'json'
+
+  backward_compatibility = p('dns_backward_compatible_domain_name')
+  jenkins_hostname = (backward_compatibility &amp;&amp; index == 0) ? "http://pivotal-cloudbees." + p("cf.domain") : "http://jenkins-" + index.to_s + "." + p("cf.domain")
+
+  config = {
+    "jenkins" => {
+      "location" => {
+        "url" => jenkins_hostname,
+        "adminEmail" => p("jenkins.license.email")
+      },
+      "viewDescription" =>p("jenkins.viewDescription"),
+      "identifierPrefix" => p("jenkins.identifierPrefix"),
+      "masterIndex" => index,
+      "totalMastersCount" => p("jenkins.master_ips").count,
+      "slaves" => {
+        "credentials" => {
+          "username" => "vcap",
+          "sshPrivateKey" => p("jenkins.master_ssh_private_key")
+        },
+        "hosts" => p("jenkins.slave_ips")
+      },
+      "security" => {
+        "devMode" => p("jenkins.security.dev_mode"),
+        "authentication" => {
+          "uaa" => {
+            "clientId" => p("uaa.client_id"),
+            "clientSecret" => p("uaa.client_secret"),
+            "uaaServerEndpoint" => p("uaa.uaa_server_endpoint"),
+            "apiServerEndpoint" => p("uaa.api_server_endpoint"),
+            "loginServerEndpoint" => p("uaa.login_server_endpoint"),
+            "uaaGroupsWhitelist" => p("jenkins.security.groups.uaa_groups_whitelist")
+          }
+        },
+        "groups"=> {
+          "adminGroupName" => p("jenkins.security.groups.group_admins")
+        }
+      },
+      "syslog" => {
+        "host" => p("syslog.host"),
+        "port" => p("syslog.port"),
+        "transport" =>  p("syslog.transport"),
+        "app" =>  p("syslog.app"),
+        "messageHostname" =>  p("syslog.messageHostname"),
+        "messageFormat" => p("syslog.messageFormat")
+      }
+    }
+  }
+  JSON.pretty_generate(config)
+%>
 </branch>
 <branch value="cloudfoundry-community" >
 </branch>

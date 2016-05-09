@@ -3,6 +3,24 @@
 <branch value="ourScratch1" >
 </branch>
 <branch value="CloudBees" >
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+
+# Available variables:
+# $BOSH_INSTALL_TARGET - /var/vcap/packages/$PACKAGE_NAME
+# $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
+# $PWD - $BOSH_COMPILE_TARGET
+
+mkdir -p $BOSH_INSTALL_TARGET/apt
+
+for DEB in $(ls -1 apt/ttf-dejavu/*.deb); do
+  echo "Installing $(basename $DEB)"
+  dpkg -x $DEB $BOSH_INSTALL_TARGET/apt
+done
+
+cp -a apt/ttf-dejavu/profile.sh $BOSH_INSTALL_TARGET/
 </branch>
 <branch value="cloudfoundry-community" >
 </branch>

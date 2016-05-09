@@ -3,6 +3,41 @@
 <branch value="ourScratch1" >
 </branch>
 <branch value="CloudBees" >
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+
+# Available variables:
+# $BOSH_INSTALL_TARGET - /var/vcap/packages/$PACKAGE_NAME
+# $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
+# $PWD - $BOSH_COMPILE_TARGET
+
+if [[ `uname -a` =~ "x86_64" ]] ; then
+  archive="openjdk-8/openjdk-1.8.0_65.tar.gz"
+  echo "Using 64-bit version"
+else
+  echo "32-bit Java not supported"
+  exit 1
+fi
+
+if [[ -f $archive ]] ; then
+  echo "Archive found"
+else
+  echo "Archive not found"
+  exit 1
+fi
+
+echo "Extracting archive..."
+cd ${BOSH_INSTALL_TARGET}
+tar xzf $BOSH_COMPILE_TARGET/$archive
+
+if [[ -d bin &amp;&amp; `bin/java -version 2>&amp;1` =~ "openjdk version" &amp;&amp; $? == 0 ]]; then
+  echo "OpenJDK is properly installed"
+else
+  echo "OpenJDK is not properly packaged"
+  exit 1
+fi
 </branch>
 <branch value="cloudfoundry-community" >
 </branch>

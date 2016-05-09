@@ -3,6 +3,9 @@
 <branch value="ourScratch1" >
 </branch>
 <branch value="CloudBees" >
+&lt;?xml version='1.0' encoding='UTF-8'?>
+&lt;hudson>
+&lt;/hudson>
 </branch>
 <branch value="cloudfoundry-community" >
 </branch>

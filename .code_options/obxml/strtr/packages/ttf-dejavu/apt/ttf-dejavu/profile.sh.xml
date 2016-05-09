@@ -3,6 +3,11 @@
 <branch value="ourScratch1" >
 </branch>
 <branch value="CloudBees" >
+export PATH="/var/vcap/packages/ttf_dejavu/usr/bin:$PATH"
+export LD_LIBRARY_PATH="/var/vcap/packages/ttf_dejavu/usr/lib:${LD_LIBRARY_PATH:-}"
+export INCLUDE_PATH="/var/vcap/packages/ttf_dejavu/usr/include:${INCLUDE_PATH:-}"
+export CPATH="$INCLUDE_PATH"
+export CPPPATH="$INCLUDE_PATH"
 </branch>
 <branch value="cloudfoundry-community" >
 </branch>
