@@ -1,17 +1,20 @@
-# abort script on any command that exits with a non zero value
-set -e -x -u
+set -e # exit immediately if a simple command exits with a non-zero status
+set -x # verbose display of each command
 
+set -u # report the usage of uninitialized variables
+
+export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+
+# Available variables:
 # $BOSH_INSTALL_TARGET - /var/vcap/packages/$PACKAGE_NAME
 # $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
 # $PWD - $BOSH_COMPILE_TARGET
-export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
-echo "DEBUG: PACKAGE_NAME=$PACKAGE_NAME" ;
 
-mkdir -p $BOSH_INSTALL_TARGET
+mkdir -p $BOSH_INSTALL_TARGET/apt
 
-for DEB in $(ls -1 $PACKAGE_NAME/*.deb); do
+for DEB in $(ls -1 apt/ttf-dejavu/*.deb); do
   echo "Installing $(basename $DEB)"
-  dpkg -x $DEB $BOSH_INSTALL_TARGET
+  dpkg -x $DEB $BOSH_INSTALL_TARGET/apt
 done
 
-cp -a $PACKAGE_NAME/profile.sh $BOSH_INSTALL_TARGET/
+cp -a apt/ttf-dejavu/profile.sh $BOSH_INSTALL_TARGET/

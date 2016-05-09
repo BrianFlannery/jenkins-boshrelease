@@ -6,6 +6,7 @@ set -u # report the usage of uninitialized variables
 set -x # verbose display of each command
 
 
+
 export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
 
 
@@ -14,7 +15,7 @@ export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
 # $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
 # $PWD - $BOSH_COMPILE_TARGET
 
-# don't use the apt-get install approach as there are tons of problems if foncconfig .deb package is not installed in the standard folders (Cyrille Le Clerc)
+# don't use the apt-get install approach as there are tons of problems if the fontconfig .deb package is not installed in the standard folders (Cyrille Le Clerc)
 
 
 # install freetype
