@@ -1,35 +1,62 @@
 <OBXml>
-<branches field="source" >
-<branch value="ourScratch1" >
-</branch>
-<branch value="CloudBees" >
 set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
 
+<branches field="jenkins_master_war_verbose" >
+<branch value="true" >
+set -x # verbose display of each command
+</branch>
+<branch value="false" >
+</branch>
+</branches>
+
+<branches field="jenkins_master_war_package_name" >
+<branch value="true" >
 export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+</branch>
+<branch value="false" >
+</branch>
+</branches>
 
-# Available variables:
-# $BOSH_INSTALL_TARGET - /var/vcap/packages/$PACKAGE_NAME
-# $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
+# Available variables
+<obxmlul label="jenkins_master_war_target_vars">
+<li i="1"># $BOSH_COMPILE_TARGET - explain_BOSH_COMPILE_TARGET
+</li>
+<li i="2"># $BOSH_INSTALL_TARGET - explain_BOSH_INSTALL_TARGET
+</li>
+</obxmlul>
+<branches field="jenkins_master_war_verbose" >
+<branch value="true" >
 # $PWD - $BOSH_COMPILE_TARGET
+</branch>
+<branch value="false" >
+</branch>
+</branches>
 
+<branches field="jenkins_master_war_assume_one_war" >
+<branch value="one" >
 # copy the war file
 cp -a $BOSH_COMPILE_TARGET/$PACKAGE_NAME/*.war ${BOSH_INSTALL_TARGET}/jenkins.war
+</branch>
+<branch value="specific_one" >
+cp jenkins/jenkins-1.596.2.war $BOSH_INSTALL_TARGET/jenkins.war
+</branch>
+<branch value="assume_not" >
+echo "DEBUG: cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME" ;
+cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME ;
+archive=`ls -lart | egrep '[.]war$' | tail -1 | awk '{print $NF}'` ;
 
+cp -a $BOSH_COMPILE_TARGET/$PACKAGE_NAME/$archive ${BOSH_INSTALL_TARGET}/jenkins.war
+</branch>
+</branches>
+
+<branches field="packages_jenkins_plugins" >
+<branch value="true" >
 mkdir -p ${BOSH_INSTALL_TARGET}/plugins
 
 cp /var/vcap/packages/jenkins-plugins/*.* ${BOSH_INSTALL_TARGET}/plugins/ || :  # use  || : to not fail if the directory is empty
-
 </branch>
-<branch value="cloudfoundry-community" >
-set -e # exit immediately if a simple command exits with a non-zero status
-set -u # report the usage of uninitialized variables
-
-# Available variables
-# $BOSH_COMPILE_TARGET - where this package &amp; spec'd source files are available
-# $BOSH_INSTALL_TARGET - where you copy/install files to be included in package
-
-cp jenkins/jenkins-1.596.2.war $BOSH_INSTALL_TARGET/jenkins.war
+<branch value="false" >
 </branch>
 </branches>
 </OBXml>
