@@ -25,6 +25,8 @@ filesShouldBeThere=(
 ./packages/ttf_dejavu_dir/spec
 ./packages/fontconfig/packaging
 ./packages/fontconfig/spec
+./packages/jenkins_plugins/packaging
+./packages/jenkins_plugins/spec
 ) ;
 if [[ '' ]] ; then
 ./NOTICE

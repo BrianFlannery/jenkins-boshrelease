@@ -10,3 +10,6 @@ var_vcap_packages_jre_java_home : var_vcap_packages_jre_java_home
 pidfile_output_label : output_label
 ttf_dejavu_dir : ttf_dejavu
 jenkins_master_war : jenkins_master_war
+explain_BOSH_COMPILE_TARGET : where this package &amp; spec'd source files are available (/var/vcap/data/compile/$PACKAGE_NAME)
+explain_BOSH_INSTALL_TARGET : where you copy/install files to be included in package (/var/vcap/packages/$PACKAGE_NAME)
+jenkins_plugins_dir : jenkins_plugins
