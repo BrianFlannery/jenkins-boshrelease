@@ -24,16 +24,7 @@ set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
 </branch>
 </branches>
-
 JOB_NAME=$1
-<branches field="env_bash" >
-<branch value="bash_eu" >
-</branch>
-<branch value="env_bash" >
-set -e # exit immediately if a simple command exits with a non-zero status
-set -u # report the usage of uninitialized variables
-</branch>
-</branches>
 <branches field="bash_arg_cascade" >
 <branch value="fancy" >
 #the following will assign 3rd or 2nd or 1st argument as output label

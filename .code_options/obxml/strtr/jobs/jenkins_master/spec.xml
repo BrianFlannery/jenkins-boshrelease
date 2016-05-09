@@ -1,8 +1,6 @@
-<OBXml>
----
+<OBXml>---
 name: jenkins_master
-packages:
-<branches field="source" >
+packages:<branches field="source" >
 <branch value="ourScratch1" >
 - jenkins_master_war
 - openjre_8
@@ -34,9 +32,8 @@ packages:
 - golang1.3
 </branch>
 </branches>
-templates:
-<branches field="source" >
-<branch value="ourScratch1" >
+templates:<branches field="source" >
+  <branch value="ourScratch1" >
   # bin/jenkins_master_ctl: bin/ctl
   bin/jenkins_master_ctl: bin/jenkins_master_ctl
 </branch>
@@ -72,8 +69,7 @@ templates:
   config/mime.types: config/mime.types
 </branch>
 </branches>
-properties:
-<branches field="source" >
+properties:<branches field="source" >
 <branch value="ourScratch1" >
    jenkins_master.httpPort:
      description: HTTP Port

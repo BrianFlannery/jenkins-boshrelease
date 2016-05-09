@@ -1,6 +1,6 @@
 jobs : jobs
 packages : packages
-openjdkjredir : openjre
+openjdkjredir : openjre_8
 nginx : apache_httpd
 configFile1 : empty
 configFile1Ext : config
@@ -8,3 +8,4 @@ configFile2 : empty
 configFile2Ext : config
 var_vcap_packages_jre_java_home : var_vcap_packages_jre_java_home
 pidfile_output_label : output_label
+ttf_dejavu_dir : ttf_dejavu

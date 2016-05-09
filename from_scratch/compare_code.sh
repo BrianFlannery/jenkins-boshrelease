@@ -17,9 +17,9 @@ filesShouldBeThere=(
 ./jobs/jenkins_master/templates/helpers/ctl_setup.sh
 ./jobs/jenkins_master/templates/helpers/ctl_utils.sh
 ./packages/jenkins/packaging
-./packages/openjdkjredir-8/packaging
-./packages/ttf-dejavu/apt/ttf-dejavu/profile.sh
-./packages/ttf-dejavu/packaging
+./packages/openjdkjredir/packaging
+./packages/ttf_dejavu_dir/apt/ttf-dejavu/profile.sh
+./packages/ttf_dejavu_dir/packaging
 ./packages/fontconfig/packaging
 ) ;
 if [[ '' ]] ; then
