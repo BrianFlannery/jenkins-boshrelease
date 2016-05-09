@@ -9,3 +9,4 @@ configFile2Ext : config
 var_vcap_packages_jre_java_home : jre
 pidfile_output_label : JOB_NAME
 ttf_dejavu_dir : ttf-dejavu
+jenkins_master_war : jenkins

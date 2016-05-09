@@ -4,3 +4,4 @@ branch.bash_arg_cascade = straightforward
 branch.jenkins_master_classpath = none
 branch.jenkins_master_export_pidfile = export
 branch.debug_level = 1
+branch.do_fontconfig = false

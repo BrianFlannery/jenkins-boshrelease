@@ -5,3 +5,4 @@ branch.bash_arg_cascade = fancy
 branch.jenkins_master_classpath = ctl_setup
 branch.jenkins_master_export_pidfile = not_exported
 branch.debug_level = 1
+branch.do_fontconfig = true

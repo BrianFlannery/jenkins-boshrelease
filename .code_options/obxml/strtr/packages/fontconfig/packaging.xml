@@ -1,20 +1,26 @@
-<OBXml>
-<branches field="source" >
-<branch value="ourScratch1" >
-</branch>
-<branch value="CloudBees" >
+<OBXml><branches field="do_fontconfig_verbose" >
+<branch value="true" >
 set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
-
+</branch>
+<branch value="false" >
+</branch>
+</branches>
 export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
-
+<branches field="do_fontconfig_verbose" >
+<branch value="true" >
 # Available variables:
 # $BOSH_INSTALL_TARGET - /var/vcap/packages/$PACKAGE_NAME
 # $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
 # $PWD - $BOSH_COMPILE_TARGET
 
 # don't use the apt-get install approach as there are tons of problems if foncconfig .deb package is not installed in the standard folders (Cyrille Le Clerc)
-
+</branch>
+<branch value="false" >
+</branch>
+</branches>
+<branches field="do_fontconfig" >
+<branch value="true" >
 # install freetype
 tar -xf $PACKAGE_NAME/freetype-2.5.3.tar.bz2
 cd freetype-2.5.3
@@ -39,7 +45,7 @@ export LDFLAGS="-L/var/vcap/packages/fontconfig/freetype/lib"
 make
 make prefix=$BOSH_INSTALL_TARGET install
 </branch>
-<branch value="cloudfoundry-community" >
+<branch value="false" >
 </branch>
 </branches>
 </OBXml>
