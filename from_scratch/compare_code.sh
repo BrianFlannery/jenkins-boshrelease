@@ -29,6 +29,7 @@ filesShouldBeThere=(
 ./packages/jenkins_plugins/spec
 ) ;
 if [[ '' ]] ; then
+./src/ttf_dejavu/profile.sh
 ./NOTICE
 ./release.MF
 

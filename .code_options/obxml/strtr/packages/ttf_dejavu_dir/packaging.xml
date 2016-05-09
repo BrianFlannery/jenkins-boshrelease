@@ -1,9 +1,9 @@
-<OBXml>
-<branches field="source" >
-<branch value="ourScratch1" >
+<OBXml>set -e # exit immediately if a simple command exits with a non-zero status
+<branches field="do_fontconfig_verbose" >
+<branch value="true" 
+>set -x # verbose display of each command
 </branch>
-<branch value="CloudBees" >
-set -e # exit immediately if a simple command exits with a non-zero status
+</branches>
 set -u # report the usage of uninitialized variables
 
 export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
@@ -21,8 +21,4 @@ for DEB in $(ls -1 apt/ttf-dejavu/*.deb); do
 done
 
 cp -a apt/ttf-dejavu/profile.sh $BOSH_INSTALL_TARGET/
-</branch>
-<branch value="cloudfoundry-community" >
-</branch>
-</branches>
 </OBXml>
