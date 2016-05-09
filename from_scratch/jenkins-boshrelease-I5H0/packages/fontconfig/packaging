@@ -1,10 +1,21 @@
-# abort script on any command that exits with a non zero value
-set -e -x -u
 
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+
+set -x # verbose display of each command
+
+
+export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+
+
+# Available variables:
 # $BOSH_INSTALL_TARGET - /var/vcap/packages/$PACKAGE_NAME
 # $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
 # $PWD - $BOSH_COMPILE_TARGET
-export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+
+# don't use the apt-get install approach as there are tons of problems if foncconfig .deb package is not installed in the standard folders (Cyrille Le Clerc)
+
 
 # install freetype
 tar -xf $PACKAGE_NAME/freetype-2.5.3.tar.bz2
@@ -29,3 +40,4 @@ export LDFLAGS="-L/var/vcap/packages/fontconfig/freetype/lib"
 ./configure --prefix=$BOSH_INSTALL_TARGET --disable-docs --enable-libxml2
 make
 make prefix=$BOSH_INSTALL_TARGET install
+

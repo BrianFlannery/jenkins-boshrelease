@@ -1,0 +1,7 @@
+---
+name: openjdkjredir
+
+dependencies: []
+
+files:
+- openjdkjre_archive

@@ -13,3 +13,8 @@ jenkins_master_war : jenkins
 explain_BOSH_COMPILE_TARGET : /var/vcap/data/compile/$PACKAGE_NAME
 explain_BOSH_INSTALL_TARGET : /var/vcap/packages/$PACKAGE_NAME
 jenkins_plugins_dir : jenkins-plugins
+jenkins_war_version_and_source : jenkins-enterprise-war-1.642.2.1
+openjdkjre_archive : openjdk-8/openjdk-1.8.0_65.tar.gz
+openjdkjre_version_and_source : openjdk-1.8.0_65.tar.gz
+openjdkjre_version_string : openjdk version
+openjdkjre_name : OpenJDK

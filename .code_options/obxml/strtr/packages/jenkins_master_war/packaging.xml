@@ -25,7 +25,7 @@ export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
 <li i="2"># $BOSH_INSTALL_TARGET - explain_BOSH_INSTALL_TARGET
 </li>
 </obxmlul>
-<branches field="jenkins_master_war_verbose" >
+<branches field="jenkins_master_war_verbose_comments" >
 <branch value="true" >
 # $PWD - $BOSH_COMPILE_TARGET
 </branch>
@@ -54,7 +54,7 @@ cp -a $BOSH_COMPILE_TARGET/$PACKAGE_NAME/$archive ${BOSH_INSTALL_TARGET}/jenkins
 <branch value="true" >
 mkdir -p ${BOSH_INSTALL_TARGET}/plugins
 
-cp /var/vcap/packages/jenkins-plugins/*.* ${BOSH_INSTALL_TARGET}/plugins/ || :  # use  || : to not fail if the directory is empty
+cp /var/vcap/packages/jenkins_plugins_dir/*.* ${BOSH_INSTALL_TARGET}/plugins/ || :  # use  || : to not fail if the directory is empty
 </branch>
 <branch value="false" >
 </branch>

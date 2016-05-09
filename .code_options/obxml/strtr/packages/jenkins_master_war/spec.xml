@@ -1,0 +1,20 @@
+<OBXml>---
+name: jenkins_master_war
+
+<branches field="packages_jenkins_plugins" >
+<branch value="true" >
+dependencies: 
+# - openjdkjredir
+# - ttf_dejavu_dir
+- jenkins_plugins_dir
+</branch>
+<branch value="false" >
+</branch>
+<branch value="explicitly_not" >
+dependencies: [] # no compile dependencies
+</branch>
+</branches>
+
+files:
+- jenkins_master_war/jenkins_war_version_and_source
+</OBXml>

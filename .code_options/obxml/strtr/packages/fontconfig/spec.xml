@@ -1,0 +1,8 @@
+---
+name: fontconfig
+
+dependencies: []
+
+files:
+- fontconfig/fontconfig-2.11.1.tar.bz2
+- fontconfig/freetype-2.5.3.tar.bz2

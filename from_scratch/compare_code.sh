@@ -304,7 +304,7 @@ compare_them() {
 
 }
 Diff() {
-  diff -r $1 $2 | perl -ne 'if ( /^(diff|Only)/ ) { print $_ } elsif ( /^[<>]/ ) { print "    $_" } else { print "  $_" }'
+  diff "$@" | perl -ne 'if ( /^(diff|Only)/ ) { print $_ } elsif ( /^[<>]/ ) { print "    $_" } else { print "  $_" }' ;
 }
 
 

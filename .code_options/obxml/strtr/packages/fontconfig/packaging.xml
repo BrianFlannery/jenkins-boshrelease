@@ -6,7 +6,21 @@ set -u # report the usage of uninitialized variables
 <branch value="false" >
 </branch>
 </branches>
+<branches field="jenkins_master_war_verbose" >
+<branch value="true" >
+set -x # verbose display of each command
+</branch>
+<branch value="false" >
+</branch>
+</branches>
+
+<branches field="do_fontconfig" >
+<branch value="true" >
 export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+</branch>
+<branch value="false" >
+</branch>
+</branches>
 <branches field="do_fontconfig_verbose" >
 <branch value="true" >
 # Available variables:
@@ -14,7 +28,7 @@ export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
 # $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
 # $PWD - $BOSH_COMPILE_TARGET
 
-# don't use the apt-get install approach as there are tons of problems if foncconfig .deb package is not installed in the standard folders (Cyrille Le Clerc)
+# don't use the apt-get install approach as there are tons of problems if the fontconfig .deb package is not installed in the standard folders (Cyrille Le Clerc)
 </branch>
 <branch value="false" >
 </branch>
