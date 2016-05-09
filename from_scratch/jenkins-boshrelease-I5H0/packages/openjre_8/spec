@@ -4,4 +4,4 @@ name: openjre_8
 dependencies: []
 
 files:
-- openjre_8/openjdk-1.8.0_65.tar.gz
+- openjdk-8/openjdk-1.8.0_65.tar.gz

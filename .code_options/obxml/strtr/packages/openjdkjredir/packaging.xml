@@ -1,47 +1,64 @@
-<OBXml><branches field="source" ><branch value="cloudfoundry-community" >
-# abort script on any command that exits with a non zero value
+<OBXml><branches field="source" >
+<branch value="cloudfoundry-community" 
+># abort script on any command that exits with a non zero value
 </branch></branches>
 set -e<branches field="source" >
-<branch value="ourScratch1" > # exit immediately if a simple command exits with a non-zero status
-</branch><branch value="CloudBees"   > # exit immediately if a simple command exits with a non-zero status
-</branch></branches><branches field="packages_openjdkjre_flag_uninitialized_vars" ><branch value="true" >
-set -u # report the usage of uninitialized variables
+<branch value="ourScratch1" 
+> # exit immediately if a simple command exits with a non-zero status
+</branch>
+<branch value="CloudBees"   
+> # exit immediately if a simple command exits with a non-zero status
+</branch></branches><branches field="packages_openjdkjre_flag_uninitialized_vars" >
+<branch value="true" 
+>set -u # report the usage of uninitialized variables
 </branch><branch value="false" ></branch>
-</branches><branches field="packages_openjdkjre_verbose" ><branch value="true" >
-set -x # verbose display of each command
+</branches><branches field="packages_openjdkjre_verbose" >
+<branch value="true" 
+>set -x # verbose display of each command
 </branch><branch value="false" ></branch></branches>
-<branches field="packages_set_package_name" ><branch value="true" >
-export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
+<branches field="packages_set_package_name" >
+<branch value="true" 
+>export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
 </branch><branch value="false" ></branch></branches>
-<branches field="jenkins_master_war_verbose_comments" ><branch value="true" >
-# Available variables:
-<obxmlul label="jenkins_master_war_target_vars"><li i="1"># $BOSH_COMPILE_TARGET - explain_BOSH_COMPILE_TARGET
-</li><li i="2"># $BOSH_INSTALL_TARGET - explain_BOSH_INSTALL_TARGET
+<branches field="jenkins_master_war_verbose_comments" >
+<branch value="true" 
+># Available variables:
+<obxmlul label="jenkins_master_war_target_vars">
+<li i="1"
+># $BOSH_COMPILE_TARGET - explain_BOSH_COMPILE_TARGET
+</li>
+<li i="2"
+># $BOSH_INSTALL_TARGET - explain_BOSH_INSTALL_TARGET
 </li></obxmlul>
 # $PWD - $BOSH_COMPILE_TARGET
 </branch><branch value="false" ></branch></branches>
 
-<branches field="packages_openjdkjre_archive" ><branch value="latest" >
-echo "DEBUG: cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME" ;
+<branches field="packages_openjdkjre_archive" >
+<branch value="latest" 
+>echo "DEBUG: cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME" ;
 cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME ;
 archive=`ls -lart | egrep '[.](tar[.]|t)gz$' | tail -1 | awk '{print $NF}'` ;
 archive="$PACKAGE_NAME/$archive" ;
 </branch><branch value="set" ></branch></branches>
 
-<branches field="x64_bit_check" ><branch value="true" >
-if [[ `uname -a` =~ "x86_64" ]] ; then
+<branches field="x64_bit_check" >
+<branch value="true" 
+>if [[ `uname -a` =~ "x86_64" ]] ; then
   archive="openjdkjre_archive"
   echo "Using 64-bit version"
 else
 </branch><branch value="false" ></branch></branches>
-<branches field="source" ><branch value="ourScratch1" >
-</branch><branch value="CloudBees" >
-  echo "32-bit Java not supported"
-</branch><branch value="cloudfoundry-community" >
-  echo "Only 64-bit architectures are supported."
+<branches field="source" >
+<branch value="ourScratch1" ></branch>
+<branch value="CloudBees" 
+>  echo "32-bit Java not supported"
+</branch>
+<branch value="cloudfoundry-community" 
+>  echo "Only 64-bit architectures are supported."
 </branch></branches>
-<branches field="x64_bit_check" ><branch value="true" >
-  exit 1
+<branches field="x64_bit_check" >
+<branch value="true" 
+>  exit 1
 fi
 
 if [[ -f $archive ]] ; then
@@ -53,18 +70,22 @@ fi
 </branch><branch value="false" ></branch></branches>
 
 echo "Extracting archive..."
-<branches field="packages_openjdkjre_cd_or_cp" ><branch value="cd" >
-cd ${BOSH_INSTALL_TARGET}
+<branches field="packages_openjdkjre_cd_or_cp" >
+<branch value="cd" 
+>cd ${BOSH_INSTALL_TARGET}
 tar xzf $BOSH_COMPILE_TARGET/$archive
-</branch><branch value="cp" >
-tar xzf $archive
+</branch>
+<branch value="cp" 
+>tar xzf $archive
 </branch></branches>
 
 if [[ -d bin &amp;&amp; `bin/java -version 2>&amp;1` =~ "openjdkjre_version_string" &amp;&amp; $? == 0 ]]; then
-<branches field="packages_openjdkjre_cd_or_cp" ><branch value="cd" >
-  echo "openjdkjre_name is properly installed"
-</branch><branch value="cp" >
-  cp -a * ${BOSH_INSTALL_TARGET}
+<branches field="packages_openjdkjre_cd_or_cp" >
+<branch value="cd" 
+>  echo "openjdkjre_name is properly installed"
+</branch>
+<branch value="cp" 
+>  cp -a * ${BOSH_INSTALL_TARGET}
 </branch></branches>
 else
   echo "openjdkjre_name is not properly packaged"

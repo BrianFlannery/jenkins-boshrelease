@@ -1,24 +1,37 @@
-# abort script on any command that exits with a non zero value
-set -e -x -u
+
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+set -x # verbose display of each command
 
 export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
 
-# $BOSH_INSTALL_TARGET - /var/vcap/packages/$PACKAGE_NAME
-# $BOSH_COMPILE_TARGET - /var/vcap/data/compile/$PACKAGE_NAME
+
+# Available variables:
+# $BOSH_COMPILE_TARGET - where this package & spec'd source files are available (/var/vcap/data/compile/$PACKAGE_NAME)
+# $BOSH_INSTALL_TARGET - where you copy/install files to be included in package (/var/vcap/packages/$PACKAGE_NAME)
+
 # $PWD - $BOSH_COMPILE_TARGET
 
-echo "Extracting archive..."
+
 echo "DEBUG: cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME" ;
 cd ${BOSH_COMPILE_TARGET}/$PACKAGE_NAME ;
 archive=`ls -lart | egrep '[.](tar[.]|t)gz$' | tail -1 | awk '{print $NF}'` ;
-echo "DEBUG: cd ${BOSH_INSTALL_TARGET}" ;
-cd ${BOSH_INSTALL_TARGET} ;
-tar xzf $BOSH_COMPILE_TARGET/$PACKAGE_NAME/$archive ;
+archive="$PACKAGE_NAME/$archive" ;
+
+
+
+
+
+
+echo "Extracting archive..."
+cd ${BOSH_INSTALL_TARGET}
+tar xzf $BOSH_COMPILE_TARGET/$archive
+
 
 if [[ -d bin && `bin/java -version 2>&1` =~ "openjdk version" && $? == 0 ]]; then
   echo "OpenJDK is properly installed"
+
 else
   echo "OpenJDK is not properly packaged"
   exit 1
 fi
-
