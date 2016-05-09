@@ -1,5 +1,6 @@
-pidfile_clarity : verbose
-env_bash : bash_eu
-bash_arg_cascade : straightforward
-jenkins_master_classpath : ctl_setup
-jenkins_master_export_pidfile : export
+pidfile_clarity = verbose
+env_bash = bash_eu
+bash_arg_cascade = straightforward
+jenkins_master_classpath = ctl_setup
+jenkins_master_export_pidfile = export
+debug_level = 2

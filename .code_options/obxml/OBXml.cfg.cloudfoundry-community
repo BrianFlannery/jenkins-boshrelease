@@ -1,5 +1,6 @@
-pidfile_clarity : terse
-env_bash : env_bash
-bash_arg_cascade : straightforward
-jenkins_master_classpath : none
-jenkins_master_export_pidfile : export
+pidfile_clarity = terse
+env_bash = env_bash
+bash_arg_cascade = straightforward
+jenkins_master_classpath = none
+jenkins_master_export_pidfile = export
+debug_level = 1

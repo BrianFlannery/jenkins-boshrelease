@@ -1,17 +1,14 @@
 <OBXml>#!/bin/bash -eu
-<branches field="source" >
-<branch value="ourScratch1" >
+<branches field="env_bash" >
+<branch value="bash_eu" >
 </branch>
-<branch value="CloudBees" >
-</branch>
-<branch value="cloudfoundry-community" >
+<branch value="env_bash" >
 set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
 </branch>
 </branches>
 # Setup env vars and folders for the <branches field="source" >
-<branch value="ourScratch1" ></branch>
-<branch value="CloudBees" ></branch>
+<branch value="ourScratch1" ></branch><branch value="CloudBees" ></branch>
 <branch value="cloudfoundry-community" >webapp_ctl </branch>
 </branches>script
 <branches field="source" >
@@ -23,15 +20,14 @@ cd $(dirname ${BASH_SOURCE[0]})/..
 <branch value="cloudfoundry-community" >
 </branch>
 </branches>
+
 <branches field="source" >
 <branch value="ourScratch1" >
-DEBUG=2 ;
-jre=openjre_8 ;
-j=jenkins_master
-
-RUN_DIR=/var/vcap/sys/run/$j
-LOG_DIR=/var/vcap/sys/log/$j
-PIDFILE=${RUN_DIR}/pid
+# # Handled by ctl_setup
+# j=jenkins_master
+# RUN_DIR=/var/vcap/sys/run/$j
+# LOG_DIR=/var/vcap/sys/log/$j
+# PIDFILE=${RUN_DIR}/pid
 
 log="$LOG_DIR/jenkins.stdout.log" ;
 elog="$LOG_DIR/jenkins.stderr.log" ;
@@ -139,7 +135,7 @@ case $1 in
       export PATH=${package_bin_dir}:$PATH
     done
     
-    export JAVA_HOME=/var/vcap/packages/$jre
+    export JAVA_HOME=/var/vcap/packages/openjdkjredir
     export PATH=$JAVA_HOME/bin:$PATH
     [[ $PORT ]] || export PORT=&lt;%= p('jenkins_master.httpPort') %>
     

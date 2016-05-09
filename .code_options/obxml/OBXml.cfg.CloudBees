@@ -1,6 +1,7 @@
 order.somethingToPutInOrder1 = 1,2,3,4
-pidfile_clarity : verbose
-env_bash : bash_eu
-bash_arg_cascade : fancy
-jenkins_master_classpath : ctl_setup
-jenkins_master_export_pidfile : not_exported
+pidfile_clarity = verbose
+env_bash = bash_eu
+bash_arg_cascade = fancy
+jenkins_master_classpath = ctl_setup
+jenkins_master_export_pidfile = not_exported
+debug_level = 1
