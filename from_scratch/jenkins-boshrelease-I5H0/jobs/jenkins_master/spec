@@ -1,15 +1,13 @@
 ---
 name: jenkins_master
-templates:
-  # bin/jenkins_master_ctl: bin/ctl
-  bin/jenkins_master_ctl: bin/jenkins_master_ctl
-  
 packages:
 - jenkins_master_war
 - openjre_8
 - fontconfig
 - ttf_dejavu
-
+templates:
+  # bin/jenkins_master_ctl: bin/ctl
+  bin/jenkins_master_ctl: bin/jenkins_master_ctl
 properties:
    jenkins_master.httpPort:
      description: HTTP Port
