@@ -1,10 +1,7 @@
 ---
 name: jenkins_master_war
 
-dependencies: 
-# - openjre_8
-# - ttf_dejavu
-- jenkins_plugins
+dependencies: []
 
 
 files:
