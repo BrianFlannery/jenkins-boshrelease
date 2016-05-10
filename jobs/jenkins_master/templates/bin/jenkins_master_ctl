@@ -29,6 +29,7 @@ case $1 in
 
     flags=(
       -Djava.io.tmpdir="$TMPDIR"
+      -Djava.awt.headless=true
       -jar $jenkins_war
       --httpPort=$PORT
     )
