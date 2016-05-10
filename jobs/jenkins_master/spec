@@ -19,8 +19,6 @@ templates:
   config/nginx.conf.erb: config/nginx.conf
   config/mime.types: config/mime.types
 properties:
-  jenkins.admin.password:
-    description: Admin user password
   jenkins.server.internal_http_port:
     description: "Internal http port between nginx & jenkins"
     default: 8088
