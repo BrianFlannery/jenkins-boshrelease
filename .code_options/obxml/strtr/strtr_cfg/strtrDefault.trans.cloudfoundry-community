@@ -18,3 +18,12 @@ openjdkjre_archive : java/jre-1.6.0_24-x86_64.tar.gz
 openjdkjre_version_and_source : openjdk-1.8.0_65.tar.gz
 openjdkjre_version_string : Java HotSpot
 openjdkjre_name : JVM
+jenkins_master_monit_proxy_ctl : jenkins_master_nginx_ctl
+jenkins_master_monit_proxy_process : nginx_jenkins_master
+nginx_config : nginx
+nginx_config_ext : conf
+nginx_ctl : nginx_ctl
+java_binary : java_binary
+full_jenkins_war : $jenkins_war
+jobs_jenkins_master_cd_dirname_bash_source_0 : #
+link_directory_erase_dest_if_exist : _

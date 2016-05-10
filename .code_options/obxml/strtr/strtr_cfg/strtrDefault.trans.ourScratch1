@@ -1,7 +1,7 @@
 jobs : jobs
 packages : packages
 openjdkjredir : openjre_8
-nginx : apache_httpd
+nginx : haproxy
 configFile1 : empty
 configFile1Ext : config
 configFile2 : empty
@@ -18,3 +18,12 @@ openjdkjre_archive : openjdk-8/openjdk-1.8.0_65.tar.gz
 openjdkjre_version_and_source : openjdk-1.8.0_65.tar.gz
 openjdkjre_version_string : openjdk version
 openjdkjre_name : OpenJDK
+jenkins_master_monit_proxy_ctl : haproxy_ctl
+jenkins_master_monit_proxy_process : haproxy
+nginx_config : haproxy
+nginx_config_ext : config
+nginx_ctl : haproxy_ctl
+java_binary : JAVA_HOME/bin/java $JVM_ARGS
+full_jenkins_war : /var/vcap/packages/jenkins_master_war/jenkins.war
+jobs_jenkins_master_cd_dirname_bash_source_0 : cd $(dirname ${BASH_SOURCE[0]})/..
+link_directory_erase_dest_if_exist : update_dir_link

@@ -1,7 +1,14 @@
----
+<OBXml>---
 name: openjdkjredir
 
-dependencies: []
+<branches field="packages_openjdkjre_dependencies">
+<branch value="exclude" 
+></branch>
+<branch value="explicitly_not" 
+>dependencies: []
+</branch>
+</branches>
 
 files:
 - openjdkjre_archive
+</OBXml>

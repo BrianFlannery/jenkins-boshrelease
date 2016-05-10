@@ -101,7 +101,8 @@ done
 <branch value="none">
 </branch>
 </branches>
-<branches field="jenkins_master_export_pidfile" ><branch value="export" >export </branch><branch value="not_exported" ></branch></branches>PIDFILE=$RUN_DIR/$pidfile_output_label.pid
+<branches field="jenkins_master_export_pidfile" ><branch value="export" 
+>export </branch><branch value="not_exported" ></branch></branches>PIDFILE=$RUN_DIR/$pidfile_output_label.pid
 
 echo '$PATH' $PATH
 <branches field="source" >

@@ -1,0 +1,15 @@
+<OBXml>
+<branches field="source" >
+<branch value="ourScratch1" >
+</branch>
+<branch value="CloudBees" 
+>&lt;% if p("haproxy.ssl_enabled") %>
+&lt;%= p("haproxy.cert_and_private_key_pems") %>
+&lt;% else %>
+SSL IS DISABLED
+&lt;% end %>
+</branch>
+<branch value="cloudfoundry-community" >
+</branch>
+</branches>
+</OBXml>

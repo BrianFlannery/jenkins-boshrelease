@@ -2,8 +2,8 @@ jobs : jobs
 packages : packages
 openjdkjredir : openjdk-8
 nginx : haproxy
-configFile1 : mime
-configFile1Ext : types
+configFile1 : empty
+configFile1Ext : config
 configFile2 : ssl
 configFile2Ext : pem.erb
 var_vcap_packages_jre_java_home : java7
@@ -18,3 +18,15 @@ openjdkjre_archive : openjdk-8/openjdk-1.8.0_65.tar.gz
 openjdkjre_version_and_source : openjdk-1.8.0_65.tar.gz
 openjdkjre_version_string : openjdk version
 openjdkjre_name : OpenJDK
+jenkins_master_monit_proxy_ctl : haproxy_ctl
+jenkins_master_monit_proxy_process : haproxy
+nginx_config : haproxy
+nginx_config_ext : config
+nginx_ctl : haproxy_ctl
+java_binary : JAVA_HOME/bin/java $JVM_ARGS
+full_jenkins_war : /var/vcap/packages/jenkins/jenkins.war
+job_jenkins_master_ctl_pid_verbose_comment : #
+jobs_jenkins_master_cd_dirname_bash_source_0 : cd $(dirname ${BASH_SOURCE[0]})/..
+link_directory_erase_dest_if_exist : link_directory_erase_dest_if_exist
+source_file : source_file
+dest_file : dest_file

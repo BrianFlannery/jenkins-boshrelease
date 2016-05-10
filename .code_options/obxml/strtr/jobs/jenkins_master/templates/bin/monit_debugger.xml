@@ -1,0 +1,38 @@
+<OBXml><branches field="source" >
+<branch value="ourScratch1" 
+>#!/bin/bash -eu
+
+</branch>
+<branch value="CloudBees" 
+>#!/bin/bash -eu
+
+</branch>
+<branch value="cloudfoundry-community" 
+>#!/bin/sh
+</branch>
+</branches>
+# USAGE monit_debugger &lt;label> command to run
+mkdir -p /var/vcap/sys/log/monit
+{
+  echo "MONIT-DEBUG date"
+  date
+  echo "MONIT-DEBUG env"
+  env
+  echo "MONIT-DEBUG $@"
+<branches field="source" >
+<branch value="ourScratch1" 
+>  shift
+  $@
+</branch>
+<branch value="CloudBees" 
+>  shift
+  $@
+</branch>
+<branch value="cloudfoundry-community" 
+>  $2 $3 $4 $5 $6 $7
+</branch>
+</branches>
+  R=$?
+  echo "MONIT-DEBUG exit code $R"
+} >/var/vcap/sys/log/monit/monit_debugger.$1.log 2>&amp;1
+</OBXml>

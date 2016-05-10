@@ -1,44 +1,119 @@
 <OBXml>---
 name: jenkins_master
-packages:<branches field="source" >
-<branch value="ourScratch1" >
+packages:
 - jenkins_master_war
-- openjre_8
-- fontconfig
-- ttf_dejavu
+- openjdkjredir
+<branches field="source" >
+<branch value="ourScratch1" 
+>- fontconfig
+- ttf_dejavu_dir
 </branch>
-<branch value="CloudBees" >
-- jenkins
-- openjdk-8
-- ttf-dejavu
-- fontconfig
-- haproxy
-- git
+<branch value="CloudBees" 
+>- fontconfig
+- ttf_dejavu_dir
+</branch>
+<branch value="cloudfoundry-community" 
+></branch>
+</branches><branches field="jenkins_master_use_proxy" >
+<branch value="true" 
+>- nginx
+</branch>
+</branches><branches field="jenkins_master_use_route_registrar" >
+<branch value="true" 
+>- route-registrar
+</branch>
+</branches><branches field="source" >
+<branch value="ourScratch1" 
+></branch>
+<branch value="CloudBees" 
+>- git
 - maven
-- route-registrar
 - jenkins-init-script
 - ruby
 - cloudfoundry-cli
 - syslog_aggregator
 </branch>
-<branch value="cloudfoundry-community" >
-- jenkins
-- jre
-- nginx
-- git
+<branch value="cloudfoundry-community" 
+>- git
 - cf-cli
 - bosh-cli
 - ruby
 - golang1.3
 </branch>
 </branches>
-templates:<branches field="source" >
-  <branch value="ourScratch1" >
-  # bin/jenkins_master_ctl: bin/ctl
+templates:
+<obxmlul label="jenkins_master_spec_template_order">
+<li i="1"
+><branches field="use_monit_debugger" >
+<branch value="true" 
+>  bin/monit_debugger: bin/monit_debugger
+</branch>
+</branches>
+</li>
+<li i="2"
+>  data/properties.sh.erb: data/properties.sh
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+</li>
+<li i="3"
+>
+</li>
+<li i="4"
+>  bin/jenkins_master_ctl: bin/jenkins_master_ctl
+</li>
+<li i="5"
+>  config/jenkins_home/bosh-configuration.json.erb: jenkins_home_template/bosh-configuration.json
+<branches field="source" >
+<branch value="CloudBees" 
+>  config/jenkins_home/cloudbees-referrer.txt: jenkins_home_template/.cloudbees-referrer.txt
+</branch></branches>
+  config/jenkins_home/config.xml.erb: jenkins_home_template/config.xml
+<branches field="source" >
+<branch value="CloudBees" 
+>  config/jenkins_home/registration-details.json.erb: jenkins_home_template/registration-details.json
+</branch>
+</branches><branches field="jenkins_master_use_route_registrar" >
+<branch value="true" 
+>
+  bin/route_registrar_ctl: bin/route_registrar_ctl
+  config/route_registrar/registrar_settings.yml.erb: config/route_registrar/registrar_settings.yml
+</branch>
+</branches><branches field="source" >
+<branch value="CloudBees" 
+>
+  config/syslog_aggregator/syslog_forwarder.conf.erb: config/syslog_aggregator/syslog_forwarder.conf
+  
+</branch>
+</branches>
+</li>
+<li i="6"
+>  bin/nginx_ctl: bin/nginx_ctl
+</li>
+<li i="7"
+>  config/nginx.conf.erb: config/nginx.conf
+<branches field="source" >
+<branch value="CloudBees" 
+>  config/haproxy/ssl.pem.erb: config/haproxy/ssl.pem
+</branch>
+<branch value="cloudfoundry-community" 
+>  config/mime.types: config/mime.types
+</branch>
+</branches>
+</li>
+</obxmlul><branches field="source" >
+<branch value="ourScratch1" 
+></branch>
+<branch value="CloudBees" 
+></branch>
+<branch value="cloudfoundry-community" 
+></branch>
+</branches><branches field="source_OBE" >
+<branch value="ourScratch1" 
+>  # bin/jenkins_master_ctl: bin/ctl
   bin/jenkins_master_ctl: bin/jenkins_master_ctl
 </branch>
-<branch value="CloudBees" >
-  bin/monit_debugger: bin/monit_debugger
+<branch value="CloudBees" 
+>  bin/monit_debugger: bin/monit_debugger
   data/properties.sh.erb: data/properties.sh
   helpers/ctl_setup.sh: helpers/ctl_setup.sh
   helpers/ctl_utils.sh: helpers/ctl_utils.sh
@@ -58,8 +133,8 @@ templates:<branches field="source" >
   config/haproxy/haproxy.config.erb: config/haproxy/haproxy.config
   config/haproxy/ssl.pem.erb: config/haproxy/ssl.pem
 </branch>
-<branch value="cloudfoundry-community" >
-  bin/jenkins_master_ctl: bin/jenkins_master_ctl
+<branch value="cloudfoundry-community" 
+>  bin/jenkins_master_ctl: bin/jenkins_master_ctl
   bin/monit_debugger: bin/monit_debugger
   bin/nginx_ctl: bin/nginx_ctl
   data/properties.sh.erb: data/properties.sh
@@ -69,14 +144,35 @@ templates:<branches field="source" >
   config/mime.types: config/mime.types
 </branch>
 </branches>
-properties:<branches field="source" >
-<branch value="ourScratch1" >
-   jenkins_master.httpPort:
+properties:
+<branches field="source" >
+<branch value="cloudfoundry-community-former" 
+>  jenkins.admin.password:
+    description: Admin user password
+  jenkins.server.internal_http_port:
+    description: "Internal http port between nginx &amp; jenkins"
+    default: 8088
+  jenkins.server.ajp13_port:
+    description: AJP13 protocal port
+    default: 8009
+</branch>
+<branch value="ourScratch1_former" 
+>   jenkins_master.httpPort:
      description: HTTP Port
      default: 8081
 </branch>
-<branch value="CloudBees" >
-  jenkins.server.internal_http_port:
+<branch value="ourScratch1" 
+>  jenkins.server.internal_http_port:
+    description: "Jenkins listen port"
+    default: 8081
+</branch>
+<branch value="cloudfoundry-community" 
+>  jenkins.server.internal_http_port:
+    description: "Internal http port between nginx &amp; jenkins"
+    default: 8088
+</branch>
+<branch value="CloudBees" 
+>  jenkins.server.internal_http_port:
     description: "Jenkins listen port"
     default: 8080
   jenkins.jvm_args:
@@ -181,25 +277,12 @@ properties:<branches field="source" >
 
   route_registrar:
     enabled: false
-
 </branch>
-<branch value="cloudfoundry-community" >
-  jenkins.admin.password:
-    description: Admin user password
-  jenkins.server.internal_http_port:
-    description: "Internal http port between nginx &amp; jenkins"
-    default: 8088
-  jenkins.server.ajp13_port:
-    description: AJP13 protocal port
-    default: 8009
-</branch>
-</branches>
-<branches field="source" >
-<branch value="ourScratch1" >
-</branch>
-<branch value="CloudBees" >
-</branch>
-<branch value="cloudfoundry-community" >
-</branch>
-</branches>
-</OBXml>
+</branches><branches field="source" >
+<branch value="ourScratch1" 
+></branch>
+<branch value="CloudBees" 
+></branch>
+<branch value="cloudfoundry-community" 
+></branch>
+</branches></OBXml>

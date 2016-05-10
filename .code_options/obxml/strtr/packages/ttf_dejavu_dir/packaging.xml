@@ -1,5 +1,5 @@
 <OBXml>set -e # exit immediately if a simple command exits with a non-zero status
-<branches field="do_fontconfig_verbose" >
+<branches field="do_ttf_dejavu_verbose" >
 <branch value="true" 
 >set -x # verbose display of each command
 </branch>
