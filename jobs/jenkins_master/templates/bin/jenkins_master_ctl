@@ -30,10 +30,7 @@ case $1 in
     flags=(
       -Djava.io.tmpdir="$TMPDIR"
       -jar $jenkins_war
-      --argumentsRealm.passwd.$ADMIN_USER=$ADMIN_PASSWORD
-      --argumentsRealm.roles.$ADMIN_USER=admin
       --httpPort=$PORT
-      --ajp13Port=$AJP13_PORT # unless ssl
     )
 
     # if [[ -n "$HTTPS_PORT" && -s "$HTTPS_KEYSTORE_FILE" ]]
