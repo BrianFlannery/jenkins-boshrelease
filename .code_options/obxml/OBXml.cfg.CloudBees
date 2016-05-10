@@ -45,3 +45,6 @@ branch.jobs_jenkins_master_jenkins_home_template = use
 branch.packages_syslog_aggregator = true
 branch.jobs_jenkins_master_default_plugins = use
 branch.jobs_jenkins_master_chown = true
+branch.jobs_jenkins_master_port_location = top
+branch.jobs_jenkins_master_port_from_property = false
+branch.jobs_jenkins_master_verbose1 = true

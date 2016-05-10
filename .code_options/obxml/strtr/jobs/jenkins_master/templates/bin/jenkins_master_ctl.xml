@@ -27,12 +27,18 @@ source $JOB_DIR/helpers/ctl_setup.sh $JOB_NAME
 <branch value="nowhere" 
 >source /var/vcap/jobs/jenkins_master/helpers/ctl_setup.sh 'jenkins_master'
 </branch></branches>
+<branches field="jobs_jenkins_master_port_from_property" >
+<branch value="true" 
+># [[ $PORT ]] || export PORT=&lt;%= p('jenkins_master.httpPort') %>
+[[ $PORT ]] || export PORT=&lt;%= p('jenkins.server.internal_http_port') %>
+</branch></branches>
 <branches field="jobs_jenkins_master_port_location" >
 <branch value="top" 
 >
 export PORT=${PORT:-8090}
 </branch>
 <branch value="false" ></branch></branches>
+
 <branches field="packages_git" >
 <branch value="true" 
 >
@@ -183,8 +189,8 @@ case $1 in
 <branch value="true" 
 >    # store pid in $PIDFILE
 </branch>
-<branch value="false" ></branch></branches>
-    echo $$ > $PIDFILE
+<branch value="false" ></branch>
+</branches>    echo $$ > $PIDFILE
     
 <branches field="jobs_jenkins_master_java_home_location" >
 <branch value="start" 
@@ -244,7 +250,7 @@ case $1 in
     
     
 <branches field="jobs_jenkins_master_jenkins_home_template" >
-<branch value="true" 
+<branch value="use" 
 >
     if [ -r "$JENKINS_HOME/config.xml" ]; then
       echo "JENKINS_HOME/config.xml already exists. Don't overwrite JENKINS_HOME with template configuration."
@@ -260,7 +266,7 @@ case $1 in
 </branch>
 <branch value="false" ></branch></branches>
 <branches field="jobs_jenkins_master_default_plugins" >
-<branch value="true" 
+<branch value="use" 
 >
     JENKINS_DEFAULT_PLUGINS=/var/vcap/packages/jenkins_master_war/plugins
     echo "Linking default plugins-to-install from $JENKINS_DEFAULT_PLUGINS/ to $JENKINS_HOME/plugins-to-install ..."
@@ -414,7 +420,6 @@ case $1 in
 
 </branch>
 </branches>
-jobs_jenkins_master_jvm_args_TcpSlaveAgentListener_hostName
     flags=(
 <branches field="jobs_jenkins_master_jvm_args_TcpSlaveAgentListener_hostName" >
 <branch value="true" 
@@ -426,12 +431,14 @@ jobs_jenkins_master_jvm_args_TcpSlaveAgentListener_hostName
 <branches field="enterprise_oc" >
 <branch value="true" 
 >      &lt;% if_p("jenkins.oc_ip") do |oc_ip| %>
+      -DMASTER_ENDPOINT="http://&lt;%= spec.networks.default.ip %>"
       -DMASTER_OPERATIONSCENTER_ENDPOINT="http://&lt;%= oc_ip %>"
       -DMASTER_INDEX="&lt;%= index %>"
       -DMASTER_NAME="jenkins-&lt;%= index %>%20(built-in)"
       -DMASTER_GRANT_ID="jenkins-&lt;%= index %>"
       &lt;% end %>
 </branch>
+</branches>
       -jar full_jenkins_war
       --httpPort=$PORT
     )

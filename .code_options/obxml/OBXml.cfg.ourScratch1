@@ -54,4 +54,7 @@ branch.packages_syslog_aggregator = false
 branch.jobs_jenkins_master_default_plugins = false
 
 branch.jobs_jenkins_master_chown = true
+branch.jobs_jenkins_master_port_location = top
+branch.jobs_jenkins_master_port_from_property = true
+branch.jobs_jenkins_master_verbose1 = false
 #

@@ -44,3 +44,6 @@ branch.jobs_jenkins_master_jenkins_home_template = false
 branch.packages_syslog_aggregator = false
 branch.jobs_jenkins_master_default_plugins = false
 branch.jobs_jenkins_master_chown = false
+branch.jobs_jenkins_master_port_location = nowhere
+branch.jobs_jenkins_master_port_from_property = false
+branch.jobs_jenkins_master_verbose1 = false
