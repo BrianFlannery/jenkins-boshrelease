@@ -22,6 +22,3 @@ properties:
   jenkins.server.internal_http_port:
     description: "Internal http port between nginx & jenkins"
     default: 8088
-  jenkins.server.ajp13_port:
-    description: AJP13 protocal port
-    default: 8009
