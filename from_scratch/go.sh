@@ -130,7 +130,11 @@ EOF4b
     fonts-dejavu-extra_2.34-1ubuntu1_all.deb ttf-dejavu-extra_2.34-1ubuntu1_all.deb \
     fonts-dejavu_2.34-1ubuntu1_all.deb ttf-dejavu_2.34-1ubuntu1_all.deb \
     ; do
-    [[ -e blobs/$p/$f ]] || execute bosh add blob "../blobs_to_add/$p/$f" $p ;
+    # # [[ -e blobs/$p/$f ]] || execute bosh add blob "../blobs_to_add/$p/$f" $p ;
+    # p_dest="$p" ;
+    p_dest="$p/apt/ttf-dejavu" ;
+    f_dest="$p_dest/$f" ;
+    [[ -e blobs/$f_dest ]] || execute bosh add blob "../blobs_to_add/$f_dest" $p_dest ;
   done ;
   
   p=fontconfig ;
