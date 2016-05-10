@@ -1,6 +1,6 @@
 ---
 name: jenkins_bosh_slave
 templates:
-  ctl.erb: bin/ctl
+  bin/jenkins_bosh_slave_ctl: bin/jenkins_bosh_slave_ctl
 
 packages:
