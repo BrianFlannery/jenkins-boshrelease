@@ -47,3 +47,4 @@ branch.jobs_jenkins_master_chown = false
 branch.jobs_jenkins_master_port_location = nowhere
 branch.jobs_jenkins_master_port_from_property = false
 branch.jobs_jenkins_master_verbose1 = false
+branch.jenkins_master_which_proxy = nginx

@@ -48,3 +48,4 @@ branch.jobs_jenkins_master_chown = true
 branch.jobs_jenkins_master_port_location = top
 branch.jobs_jenkins_master_port_from_property = false
 branch.jobs_jenkins_master_verbose1 = true
+branch.jenkins_master_which_proxy = haproxy

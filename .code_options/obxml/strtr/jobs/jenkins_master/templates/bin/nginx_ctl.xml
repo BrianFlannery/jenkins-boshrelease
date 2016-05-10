@@ -1,8 +1,5 @@
-<OBXml>
-<branches field="source" >
-<branch value="ourScratch1" >
-</branch>
-<branch value="CloudBees" 
+<OBXml><branches field="jenkins_master_which_proxy" >
+<branch value="haproxy" 
 >#!/bin/bash -eu
 
 # Setup env vars and folders for the script
@@ -49,7 +46,7 @@ case $1 in
 esac
 exit 0
 </branch>
-<branch value="cloudfoundry-community" 
+<branch value="nginx" 
 >#!/bin/bash
 
 set -e # exit immediately if a simple command exits with a non-zero status
