@@ -12,7 +12,10 @@ branch.jenkins_master_war_verbose = true
 branch.jenkins_master_war_verbose_comments = true
 branch.jenkins_master_war_package_name = true
 branch.jenkins_master_war_assume_one_war = assume_not
-branch.packages_jenkins_plugins = true
+
+# XXX
+branch.packages_jenkins_plugins = false
+
 branch.packages_openjdkjre_flag_uninitialized_vars = true
 branch.packages_openjdkjre_verbose = true
 branch.packages_openjdkjre_archive = latest

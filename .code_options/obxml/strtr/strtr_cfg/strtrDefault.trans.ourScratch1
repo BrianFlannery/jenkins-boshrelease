@@ -14,7 +14,7 @@ explain_BOSH_COMPILE_TARGET : where this package & spec'd source files are avail
 explain_BOSH_INSTALL_TARGET : where you copy/install files to be included in package (/var/vcap/packages/$PACKAGE_NAME)
 jenkins_plugins_dir : jenkins_plugins
 jenkins_war_version_and_source : jenkins-1.651.1.war # http://mirrors.jenkins-ci.org/war-stable/1.651.1/jenkins.war
-openjdkjre_archive : openjdk-8/openjdk-1.8.0_65.tar.gz
+openjdkjre_archive : openjre_8/openjdk-1.8.0_65.tar.gz
 openjdkjre_version_and_source : openjdk-1.8.0_65.tar.gz
 openjdkjre_version_string : openjdk version
 openjdkjre_name : OpenJDK

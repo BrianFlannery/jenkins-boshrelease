@@ -90,13 +90,16 @@ templates:
 >  bin/nginx_ctl: bin/nginx_ctl
 </li>
 <li i="7"
->  config/nginx.conf.erb: config/nginx.conf
+>  config/nginx/nginx_config.nginx_config_ext.erb: config/nginx/nginx_config.nginx_config_ext
 <branches field="source" >
+<branch value="ourScratch1" 
+>  config/configFile1.configFile1Ext: config/configFile1.configFile1Ext
+</branch>
 <branch value="CloudBees" 
 >  config/haproxy/ssl.pem.erb: config/haproxy/ssl.pem
 </branch>
 <branch value="cloudfoundry-community" 
->  config/mime.types: config/mime.types
+>  config/configFile1.configFile1Ext: config/configFile1.configFile1Ext
 </branch>
 </branches>
 </li>
