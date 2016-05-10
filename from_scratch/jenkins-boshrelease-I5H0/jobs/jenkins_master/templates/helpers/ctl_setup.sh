@@ -9,7 +9,7 @@
 # source /var/vcap/jobs/foobar/helpers/ctl_setup.sh JOB_NAME OUTPUT_LABEL
 # source /var/vcap/jobs/foobar/helpers/ctl_setup.sh foobar
 # source /var/vcap/jobs/foobar/helpers/ctl_setup.sh foobar foobar
-# source /var/vcap/jobs/foobar/helpers/ctl_setup.sh foobar apache_httpd
+# source /var/vcap/jobs/foobar/helpers/ctl_setup.sh foobar haproxy
 
 
 

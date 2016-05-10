@@ -2,102 +2,93 @@
 
 
 # Setup env vars and folders for the script
+cd $(dirname ${BASH_SOURCE[0]})/..
+
+export JAVA_HOME=/var/vcap/packages/openjre_8
+
+JOB_NAME=$(basename $PWD)
+JOB_DIR=/var/vcap/jobs/$JOB_NAME
+source $JOB_DIR/helpers/ctl_setup.sh $JOB_NAME
+
+# [[ $PORT ]] || export PORT=<%= p('jenkins_master.httpPort') %>
+[[ $PORT ]] || export PORT=<%= p('jenkins.server.internal_http_port') %>
+
+
+export PORT=${PORT:-8090}
 
 
 
 
-# # Handled by ctl_setup
-# j=jenkins_master
-# RUN_DIR=/var/vcap/sys/run/$j
-# LOG_DIR=/var/vcap/sys/log/$j
-# PIDFILE=${RUN_DIR}/pid
-
-log="$LOG_DIR/jenkins.stdout.log" ;
-elog="$LOG_DIR/jenkins.stderr.log" ;
-# [[ $JENKINS_HOME ]] || export JENKINS_HOME=/home/vcap/.jenkins ;
-# [[ $JENKINS_HOME ]] || export JENKINS_HOME=/home/vcap/$j ;
-# [[ $JENKINS_HOME ]] || export JENKINS_HOME=/var/vcap/store/$j ;
 
 
-die() { echo $1 ; exit 1 ;
-}
-_ex() {
-  "$@" || die "ERROR: execute: $@: $?" ;
-}
-_vex() {
-  echo "$@" ;
-  "$@" || die "ERROR: vexecute: $@: $?" ;
-  echo ;
-}
-execute() {
-  _ex "$@" 2>&1 >> $elog
-}
-vexecute() {
-  _vex "$@" 2>&1 >> $elog
-}
+
+export LANG=en_US.UTF-8
+
+export JENKINS_HOME=/var/vcap/store/jenkins_master
+
+
+
+
+
 
 case $1 in
 
   start)
-
-    # mkdir -p $RUN_DIR $LOG_DIR $JENKINS_HOME
-    # chown -R vcap:vcap $RUN_DIR $LOG_DIR $JENKINS_HOME
-    for d in $RUN_DIR $LOG_DIR $JENKINS_HOME ; do
-      [[ -z $d ]] || [[ -e $d ]] || ( mkdir -p $d ; chown -R vcap:vcap $d ) ;
-    done ;
+    pid_guard $PIDFILE $JOB_NAME
 
     echo $$ > $PIDFILE
+    
 
-    if [[ $DEBUG -gt 1 ]] ; then
-      for l in "$log" "$elog" ; do
-        ( ( echo -e "\n\n" ; date ; echo ) 2>&1 ) >> $l ;
-      done ;
-      
-      vexecute df -h  ;
-      vexecute id     ;
-      vexecute pwd    ;
-      vexecute cat $0 ;
-    fi ;
+
+
+
+
+
+
+
+
+    mkdir -p $JENKINS_HOME
     
-    cd /var/vcap/packages/jenkins_master_war
     
-    if [[ $DEBUG -gt 1 ]] ; then
-      for d in / /home /home/vcap/ /usr /var /var/vcap/ /var/vcap/packages/ \
-        /var/vcap/packages/openjre_8 \
-        ; do
-        vexecute ls -lart "$d" || true ;
-      done ;
-    fi ;
     
-    for package_bin_dir in $(ls -d /var/vcap/packages/*/*bin)
-    do
-      export PATH=${package_bin_dir}:$PATH
-    done
     
-    export JAVA_HOME=/var/vcap/packages/openjre_8
-    export PATH=$JAVA_HOME/bin:$PATH
-    [[ $PORT ]] || export PORT=<%= p('jenkins_master.httpPort') %>
-    
+
+
+
     TTF_DIR=/usr/share/fonts/truetype
-    if [[ ! -d "$TTF_DIR/ttf_dejavu" ]] ; then
-      execute mkdir -p $TTF_DIR
-      execute cp -a /var/vcap/packages/ttf_dejavu/usr/share/fonts/truetype/* $TTF_DIR
-      vexecute /var/vcap/packages/fontconfig/bin/fc-cache --force
+    if [ -d "$TTF_DIR/ttf-dejavu" ]; then
+      echo "$TTF_DIR/ttf-dejavu already exists. Don't recopy fonts."
+    else
+      mkdir -p $TTF_DIR
+      cp -a /var/vcap/packages/ttf-dejavu/apt/usr/share/fonts/truetype/* $TTF_DIR
+      echo "ttf-dejavu fonts copied"
+      /var/vcap/packages/fontconfig/bin/fc-cache --force
     fi
 
 
-    # awtFlag='' ;
-    awtFlag='-Djava.awt.headless=true' ; # https://wiki.jenkins-ci.org/display/JENKINS/Jenkins+got+java.awt.headless+problem
+    # SET VCAP OWNER OF JENKINS_HOME
+    chown -Rf vcap:vcap $JENKINS_HOME
+
+
+    # unpin plugins in .war we want to update through the pcf package
+    rm -f $JENKINS_HOME/plugins/maven-plugin.*.pinned \
+          $JENKINS_HOME/plugins/cloudbees-support.*.pinned
+
+
+    flags=(
+
+      -Djava.io.tmpdir="$TMPDIR"
+      -Djava.awt.headless=true
+
+      -jar /var/vcap/packages/jenkins_master_war/jenkins.war
+      --httpPort=$PORT
+    )
 
 
 
-    exec chpst -v $JAVA_HOME/bin/java \
-      $awtFlag \
-      -jar jenkins.war \
-      --httpPort=$PORT \
-      >>  $log \
-      2>> $elog
-
+    exec chpst -v -u vcap:vcap $JAVA_HOME/bin/java $JVM_ARGS ${flags[*]} \
+         >>$LOG_DIR/$JOB_NAME.stdout.log \
+         2>>$LOG_DIR/$JOB_NAME.stderr.log
 
     ;;
 
@@ -112,5 +103,8 @@ case $1 in
 
 esac
 exit 0
+
+
+
 
 

@@ -5,10 +5,24 @@ packages:
 - openjre_8
 - fontconfig
 - ttf_dejavu
+
 templates:
-  # bin/jenkins_master_ctl: bin/ctl
+  bin/monit_debugger: bin/monit_debugger
+
+  data/properties.sh.erb: data/properties.sh
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+
   bin/jenkins_master_ctl: bin/jenkins_master_ctl
+  config/jenkins_home/bosh-configuration.json.erb: jenkins_home_template/bosh-configuration.json
+
+  config/jenkins_home/config.xml.erb: jenkins_home_template/config.xml
+
+  bin/haproxy_ctl: bin/haproxy_ctl
+  config/haproxy.conf.erb: config/haproxy.conf
+
+
 properties:
-   jenkins_master.httpPort:
-     description: HTTP Port
-     default: 8081
+  jenkins.server.internal_http_port:
+    description: "Jenkins listen port"
+    default: 8081
