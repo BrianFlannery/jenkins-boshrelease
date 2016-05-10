@@ -2,13 +2,11 @@
 name: ttf_dejavu
  # https://wiki.jenkins-ci.org/display/JENKINS/Jenkins+got+java.awt.headless+problem
 
-dependencies: []
-
 files:
-- apt/ttf_dejavu/profile.sh
-- apt/ttf_dejavu/fonts-dejavu-core_2.34-1ubuntu1_all.deb
-- apt/ttf_dejavu/fonts-dejavu-extra_2.34-1ubuntu1_all.deb
-- apt/ttf_dejavu/fonts-dejavu_2.34-1ubuntu1_all.deb
-- apt/ttf_dejavu/ttf-dejavu-core_2.34-1ubuntu1_all.deb
-- apt/ttf_dejavu/ttf-dejavu-extra_2.34-1ubuntu1_all.deb
-- apt/ttf_dejavu/ttf-dejavu_2.34-1ubuntu1_all.deb
+- apt/ttf-dejavu/profile.sh
+- apt/ttf-dejavu/fonts-dejavu-core_2.34-1ubuntu1_all.deb
+- apt/ttf-dejavu/fonts-dejavu-extra_2.34-1ubuntu1_all.deb
+- apt/ttf-dejavu/fonts-dejavu_2.34-1ubuntu1_all.deb
+- apt/ttf-dejavu/ttf-dejavu-core_2.34-1ubuntu1_all.deb
+- apt/ttf-dejavu/ttf-dejavu-extra_2.34-1ubuntu1_all.deb
+- apt/ttf-dejavu/ttf-dejavu_2.34-1ubuntu1_all.deb

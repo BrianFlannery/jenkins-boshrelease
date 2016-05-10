@@ -12,6 +12,9 @@ export PACKAGE_NAME=$(basename $BOSH_COMPILE_TARGET)
 
 mkdir -p $BOSH_INSTALL_TARGET/apt
 
+echo hi 1>&2 ;
+pwd 1>&2 ;
+ls -lart 1>&2 ;
 for DEB in $(ls -1 apt/ttf-dejavu/*.deb); do
   echo "Installing $(basename $DEB)"
   dpkg -x $DEB $BOSH_INSTALL_TARGET/apt

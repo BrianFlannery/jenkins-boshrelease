@@ -91,13 +91,13 @@ templates:
 </li>
 <li i="7"
 >  config/nginx/nginx_config.nginx_config_ext.erb: config/nginx/nginx_config.nginx_config_ext
+  config/nginx/configFile2.configFile2Ext.erb: config/nginx/configFile2.configFile2Ext
 <branches field="source" >
 <branch value="ourScratch1" 
 >  config/configFile1.configFile1Ext: config/configFile1.configFile1Ext
 </branch>
 <branch value="CloudBees" 
->  config/haproxy/ssl.pem.erb: config/haproxy/ssl.pem
-</branch>
+></branch>
 <branch value="cloudfoundry-community" 
 >  config/configFile1.configFile1Ext: config/configFile1.configFile1Ext
 </branch>

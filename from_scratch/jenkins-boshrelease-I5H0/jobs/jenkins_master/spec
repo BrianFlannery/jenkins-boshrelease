@@ -19,7 +19,9 @@ templates:
   config/jenkins_home/config.xml.erb: jenkins_home_template/config.xml
 
   bin/haproxy_ctl: bin/haproxy_ctl
-  config/haproxy.conf.erb: config/haproxy.conf
+  config/haproxy/haproxy.config.erb: config/haproxy/haproxy.config
+  config/haproxy/empty.config.erb: config/haproxy/empty.config
+  config/empty.config: config/empty.config
 
 
 properties:

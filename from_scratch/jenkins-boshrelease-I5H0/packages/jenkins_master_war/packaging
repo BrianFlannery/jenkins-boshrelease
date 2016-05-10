@@ -27,7 +27,4 @@ cp -a $BOSH_COMPILE_TARGET/$PACKAGE_NAME/$archive ${BOSH_INSTALL_TARGET}/jenkins
 
 
 
-mkdir -p ${BOSH_INSTALL_TARGET}/plugins
-
-cp /var/vcap/packages/jenkins_plugins/*.* ${BOSH_INSTALL_TARGET}/plugins/ || :  # use  || : to not fail if the directory is empty
 

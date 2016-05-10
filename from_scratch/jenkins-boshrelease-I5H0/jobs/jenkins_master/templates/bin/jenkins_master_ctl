@@ -10,7 +10,6 @@ JOB_NAME=$(basename $PWD)
 JOB_DIR=/var/vcap/jobs/$JOB_NAME
 source $JOB_DIR/helpers/ctl_setup.sh $JOB_NAME
 
-# [[ $PORT ]] || export PORT=<%= p('jenkins_master.httpPort') %>
 [[ $PORT ]] || export PORT=<%= p('jenkins.server.internal_http_port') %>
 
 

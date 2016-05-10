@@ -29,8 +29,7 @@ source $JOB_DIR/helpers/ctl_setup.sh $JOB_NAME
 </branch></branches>
 <branches field="jobs_jenkins_master_port_from_property" >
 <branch value="true" 
-># [[ $PORT ]] || export PORT=&lt;%= p('jenkins_master.httpPort') %>
-[[ $PORT ]] || export PORT=&lt;%= p('jenkins.server.internal_http_port') %>
+>[[ $PORT ]] || export PORT=&lt;%= p('jenkins.server.internal_http_port') %>
 </branch></branches>
 <branches field="jobs_jenkins_master_port_location" >
 <branch value="top" 

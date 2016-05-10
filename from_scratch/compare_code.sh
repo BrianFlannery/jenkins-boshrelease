@@ -16,7 +16,7 @@ filesShouldBeThere=(
 ./jobs/jenkins_master/templates/config/jenkins_home/bosh-configuration.json.erb
 ./jobs/jenkins_master/templates/config/jenkins_home/config.xml.erb
 ./jobs/jenkins_master/templates/config/nginx/nginx_config.nginx_config_ext.erb
-./jobs/jenkins_master/templates/config/nginx/configFile2.configFile2Ext
+./jobs/jenkins_master/templates/config/nginx/configFile2.configFile2Ext.erb
 ./jobs/jenkins_master/templates/config/configFile1.configFile1Ext
 ./jobs/jenkins_master/templates/data/properties.sh.erb
 ./jobs/jenkins_master/templates/helpers/ctl_setup.sh
@@ -25,7 +25,7 @@ filesShouldBeThere=(
 ./packages/jenkins_master_war/spec
 ./packages/openjdkjredir/packaging
 ./packages/openjdkjredir/spec
-./packages/ttf_dejavu_dir/apt/ttf-dejavu/profile.sh
+./src/apt/ttf-dejavu/profile.sh
 ./packages/ttf_dejavu_dir/packaging
 ./packages/ttf_dejavu_dir/spec
 ./packages/fontconfig/packaging
@@ -34,6 +34,8 @@ filesShouldBeThere=(
 ./packages/jenkins_plugins/spec
 ) ;
 if [[ '' ]] ; then
+./src/ttf_dejavu_dir/apt/ttf-dejavu/profile.sh
+./packages/ttf_dejavu_dir/apt/ttf-dejavu/profile.sh
 ./src/ttf_dejavu/profile.sh
 ./NOTICE
 ./release.MF
