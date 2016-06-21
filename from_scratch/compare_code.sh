@@ -278,7 +278,7 @@ EOF2
       echo "branch.$branch2 = $permutation2" >> $o ;
       [[ ! -e $trans.$permutation1 ]] || cat $trans.$permutation1 >> $trans.properties ;
       [[ ! -e $o.$permutation1 ]] || cat $o.$permutation1 >> $o ;
-      ( export strtr_inventtrans=0 ;
+      ( export strtr_inventtrans=1 ;
         vexecute ant clean build 
       ) &> build.out.txt ;
       execute mv $builtTmp $thisD/$builtOptions/build_$permutation1/$permutation2 ;

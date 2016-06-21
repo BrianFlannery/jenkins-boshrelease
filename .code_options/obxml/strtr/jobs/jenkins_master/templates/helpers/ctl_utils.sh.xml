@@ -49,9 +49,13 @@ pid_guard() {
 
   if [ -f "$pidfile" ]; then
     pid=$(head -1 "$pidfile")
+<branches field="jobs_jenkins_master_verbose1" >
+<branch value="true" 
+>    #[[ $output_label = $name ]] is not the best solution but ensures we are checking the pid of the right
+</branch>
+</branches>
 <branches field="pidfile_clarity" >
 <branch value="verbose" >
-    #[[ $output_label = $name ]] is not the best solution but ensures we are checking the pid of the right
     if [ -n "$pid" ] &amp;&amp; [ -e /proc/$pid ] ; then
       echo "$name is already running with PID $pid, please stop it first"
       exit 1

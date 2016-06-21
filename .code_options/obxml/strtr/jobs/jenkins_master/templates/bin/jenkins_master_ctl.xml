@@ -13,6 +13,8 @@ set -u # report the usage of uninitialized variables
 </branches>script
 jobs_jenkins_master_cd_dirname_bash_source_0
 
+x=$(echo "${JVM_ARGS:-blank}") ;
+[[ "blank" != "$x" ]] || export JVM_ARGS=' ' ;
 <branches field="jobs_jenkins_master_java_home_location" >
 <branch value="top" 
 >export JAVA_HOME=/var/vcap/packages/openjdkjredir
@@ -29,7 +31,9 @@ source $JOB_DIR/helpers/ctl_setup.sh $JOB_NAME
 </branch></branches>
 <branches field="jobs_jenkins_master_port_from_property" >
 <branch value="true" 
->[[ $PORT ]] || export PORT=&lt;%= p('jenkins.server.internal_http_port') %>
+># [[ $PORT ]] || export PORT=&lt;%= p('jenkins.server.internal_http_port') %>
+x=$(echo "${PORT:-blank}") ;
+[[ "blank" != "$x" ]] || export PORT=&lt;%= p('jenkins.server.internal_http_port') %>
 </branch></branches>
 <branches field="jobs_jenkins_master_port_location" >
 <branch value="top" 
@@ -280,7 +284,7 @@ case $1 in
       echo "$TTF_DIR/ttf-dejavu already exists. Don't recopy fonts."
     else
       mkdir -p $TTF_DIR
-      cp -a /var/vcap/packages/ttf-dejavu/apt/usr/share/fonts/truetype/* $TTF_DIR
+      cp -a /var/vcap/packages/ttf_dejavu_dir/apt/usr/share/fonts/truetype/* $TTF_DIR
       echo "ttf-dejavu fonts copied"
       /var/vcap/packages/fontconfig/bin/fc-cache --force
     fi

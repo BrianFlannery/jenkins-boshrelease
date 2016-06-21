@@ -4,13 +4,18 @@
 # Setup env vars and folders for the script
 cd $(dirname ${BASH_SOURCE[0]})/..
 
+x=$(echo "${JVM_ARGS:-blank}") ;
+[[ "blank" != "$x" ]] || export JVM_ARGS=' ' ;
 export JAVA_HOME=/var/vcap/packages/openjre_8
 
 JOB_NAME=$(basename $PWD)
 JOB_DIR=/var/vcap/jobs/$JOB_NAME
 source $JOB_DIR/helpers/ctl_setup.sh $JOB_NAME
 
-[[ $PORT ]] || export PORT=<%= p('jenkins.server.internal_http_port') %>
+# [[ $PORT ]] || export PORT=<%= p('jenkins.server.internal_http_port') %>
+# export PORT=${PORT:-<%= p('jenkins.server.internal_http_port') %>}
+x=$(echo "${PORT:-blank}") ;
+[[ "blank" != "$x" ]] || export PORT=<%= p('jenkins.server.internal_http_port') %>
 
 
 export PORT=${PORT:-8090}
@@ -59,7 +64,7 @@ case $1 in
       echo "$TTF_DIR/ttf-dejavu already exists. Don't recopy fonts."
     else
       mkdir -p $TTF_DIR
-      cp -a /var/vcap/packages/ttf-dejavu/apt/usr/share/fonts/truetype/* $TTF_DIR
+      cp -a /var/vcap/packages/ttf_dejavu/apt/usr/share/fonts/truetype/* $TTF_DIR
       echo "ttf-dejavu fonts copied"
       /var/vcap/packages/fontconfig/bin/fc-cache --force
     fi

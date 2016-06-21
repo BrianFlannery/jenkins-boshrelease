@@ -27,3 +27,6 @@ java_binary : JAVA_HOME/bin/java $JVM_ARGS
 full_jenkins_war : /var/vcap/packages/jenkins_master_war/jenkins.war
 jobs_jenkins_master_cd_dirname_bash_source_0 : cd $(dirname ${BASH_SOURCE[0]})/..
 link_directory_erase_dest_if_exist : update_dir_link
+output_label : app_job_pid_name
+
+xxxx = default_root_webapp_dir
